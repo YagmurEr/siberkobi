@@ -36,7 +36,7 @@ def create_app() -> Flask:
         response.headers["Content-Security-Policy"] = (
             "default-src 'self'; "
             "style-src 'self'; "
-            "script-src 'self' 'unsafe-inline'; "
+            "script-src 'self'; "
             "img-src 'self' data:; "
             "base-uri 'self'; "
             "frame-ancestors 'none'"
