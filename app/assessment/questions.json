@@ -1,0 +1,224 @@
+{
+  "version": "2026-10-16",
+  "response_values": {
+    "evet": 2,
+    "kismen": 1,
+    "hayir": 0
+  },
+  "na_allowed": [
+    "SK-T01",
+    "SK-T13",
+    "SK-T19",
+    "SK-T20",
+    "SK-T21"
+  ],
+  "categories": [
+    {
+      "id": "A",
+      "name": "Varlık ve Zafiyet Görünürlüğü",
+      "questions": [
+        "SK-T01",
+        "SK-T02",
+        "SK-T03",
+        "SK-T04"
+      ]
+    },
+    {
+      "id": "B",
+      "name": "Kimlik ve Erişim Güvenliği",
+      "questions": [
+        "SK-T05",
+        "SK-T06",
+        "SK-T07",
+        "SK-T08",
+        "SK-T09"
+      ]
+    },
+    {
+      "id": "C",
+      "name": "Altyapı ve Tehdit Tespiti",
+      "questions": [
+        "SK-T10",
+        "SK-T11",
+        "SK-T12",
+        "SK-T13",
+        "SK-T14",
+        "SK-T15",
+        "SK-T16"
+      ]
+    },
+    {
+      "id": "D",
+      "name": "Veri, Mobil Cihaz ve Tedarikçi Güvenliği",
+      "questions": [
+        "SK-T17",
+        "SK-T18",
+        "SK-T19",
+        "SK-T20",
+        "SK-T21",
+        "SK-T22"
+      ]
+    },
+    {
+      "id": "E",
+      "name": "Siber Dayanıklılık ve Olay Müdahalesi",
+      "questions": [
+        "SK-T23",
+        "SK-T24",
+        "SK-T25"
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "SK-T01",
+      "category": "A",
+      "text": "İnternete açık tüm sistemlerimizi, uygulamalarımızı ve servislerimizi biliyor ve düzenli kontrol ediyor muyuz?",
+      "allow_na": true
+    },
+    {
+      "id": "SK-T02",
+      "category": "A",
+      "text": "Ağımıza bağlı cihazları, kullanım dışı kalmış sistemleri ve yetkisiz bağlantıları tespit edebiliyor muyuz?",
+      "allow_na": false
+    },
+    {
+      "id": "SK-T03",
+      "category": "A",
+      "text": "Kritik güvenlik açıklarını CVSS puanının yanında aktif istismar bilgisi ve iş etkisine göre önceliklendirebiliyor muyuz?",
+      "allow_na": false
+    },
+    {
+      "id": "SK-T04",
+      "category": "A",
+      "text": "Kritik güvenlik güncellemelerinin ilgili sistemlere gerçekten uygulandığını doğrulayabiliyor muyuz?",
+      "allow_na": false
+    },
+    {
+      "id": "SK-T05",
+      "category": "B",
+      "text": "Kritik hesaplarda ve uzaktan erişimlerde çok faktörlü kimlik doğrulamanın (MFA) uygulandığını ve istisnaların kontrol edildiğini doğrulayabiliyor muyuz?",
+      "allow_na": false
+    },
+    {
+      "id": "SK-T06",
+      "category": "B",
+      "text": "Yönetici hesaplarının hangi sistemlere erişebildiğini ve bu erişimlerin ne zaman kullanıldığını izleyebiliyor muyuz?",
+      "allow_na": false
+    },
+    {
+      "id": "SK-T07",
+      "category": "B",
+      "text": "İşten ayrılan çalışanların, görev değiştiren kullanıcıların ve kullanılmayan hesapların erişimlerini zamanında kaldırabiliyor muyuz?",
+      "allow_na": false
+    },
+    {
+      "id": "SK-T08",
+      "category": "B",
+      "text": "Kullanıcıların günlük işlerini gereksiz yerel yönetici (Local Administrator) yetkileri olmadan yürüttüğünü doğrulayabiliyor muyuz?",
+      "allow_na": false
+    },
+    {
+      "id": "SK-T09",
+      "category": "B",
+      "text": "Kullanıcı hesapları ve erişim yetkilerini, Active Directory, Workgroup veya kullandığımız diğer kimlik yönetimi yapısına uygun şekilde düzenli olarak kontrol edebiliyor muyuz?",
+      "allow_na": false
+    },
+    {
+      "id": "SK-T10",
+      "category": "C",
+      "text": "Bilgisayar ve sunucularımızda güvenlik korumasının aktif olduğunu ve üretilen güvenlik alarmlarının takip edildiğini doğrulayabiliyor muyuz?",
+      "allow_na": false
+    },
+    {
+      "id": "SK-T11",
+      "category": "C",
+      "text": "Güvenlik duvarı kurallarımızdaki gereksiz erişimleri ve riskli bağlantıları düzenli olarak tespit edebiliyor muyuz?",
+      "allow_na": false
+    },
+    {
+      "id": "SK-T12",
+      "category": "C",
+      "text": "Bir sistem ele geçirildiğinde diğer kritik sistemlere erişimi sınırlandırabilecek ağ veya erişim kontrollerimiz var mı?",
+      "allow_na": false
+    },
+    {
+      "id": "SK-T13",
+      "category": "C",
+      "text": "VPN ve uzaktan yönetim erişimlerinin kimler tarafından, ne zaman ve nereden kullanıldığını görebiliyor muyuz?",
+      "allow_na": true
+    },
+    {
+      "id": "SK-T14",
+      "category": "C",
+      "text": "Kritik sistemlerden gelen güvenlik kayıtlarını merkezi olarak izleyebiliyor muyuz?",
+      "allow_na": false
+    },
+    {
+      "id": "SK-T15",
+      "category": "C",
+      "text": "Güvenlik sistemlerimizin ürettiği alarmların gerçek güvenlik olaylarını tespit edebildiğini düzenli olarak doğruluyor muyuz?",
+      "allow_na": false
+    },
+    {
+      "id": "SK-T16",
+      "category": "C",
+      "text": "Phishing, smishing ve benzeri sosyal mühendislik girişimlerini tespit edebiliyor ve şüpheli durumları değerlendirebiliyor muyuz?",
+      "allow_na": false
+    },
+    {
+      "id": "SK-T17",
+      "category": "D",
+      "text": "Kişisel ve hassas kurumsal verilerin hangi sistemlerde tutulduğunu ve kimlerin bu verilere erişebildiğini biliyor muyuz?",
+      "allow_na": false
+    },
+    {
+      "id": "SK-T18",
+      "category": "D",
+      "text": "Hassas verilerin yetkisiz paylaşılmasını ve kurum dışına aktarılmasını önlemeye veya tespit etmeye yönelik kontrollerimiz çalışıyor mu?",
+      "allow_na": false
+    },
+    {
+      "id": "SK-T19",
+      "category": "D",
+      "text": "Hangi SaaS, bulut hizmeti ve üçüncü taraf sistemlerle kurumsal veri paylaştığımızı biliyor muyuz?",
+      "allow_na": true
+    },
+    {
+      "id": "SK-T20",
+      "category": "D",
+      "text": "Tedarikçi ve veri işleyenlerin sistem erişimlerini ve güvenlik risklerini düzenli değerlendiriyor muyuz?",
+      "allow_na": true
+    },
+    {
+      "id": "SK-T21",
+      "category": "D",
+      "text": "Kurumsal verilere erişen telefon ve tabletlerde ekran kilidi, güncelleme, erişim kontrolü ve kayıp cihaz müdahalesi gibi güvenlik önlemlerinin uygulandığını doğrulayabiliyor muyuz?",
+      "allow_na": true
+    },
+    {
+      "id": "SK-T22",
+      "category": "D",
+      "text": "Çalışanların yapay zekâ araçlarına hangi kurumsal ve kişisel verileri aktarabildiğini kontrol edebiliyor muyuz?",
+      "allow_na": false
+    },
+    {
+      "id": "SK-T23",
+      "category": "E",
+      "text": "Kritik sistem ve verilerin yedeklerden geri yüklenebildiğini, kabul edilebilir süreler içerisinde test ederek doğruluyor muyuz?",
+      "allow_na": false
+    },
+    {
+      "id": "SK-T24",
+      "category": "E",
+      "text": "Bir siber güvenlik olayı yaşandığında kimin müdahale edeceğini, etkilenen sistemlerin nasıl izole edileceğini ve olayın nasıl yönetileceğini biliyor muyuz?",
+      "allow_na": false
+    },
+    {
+      "id": "SK-T25",
+      "category": "E",
+      "text": "Kritik bir BT hizmeti devre dışı kaldığında iş süreçlerimizi hangi süre içerisinde yeniden başlatabileceğimizi biliyor ve bu hazırlığı düzenli olarak test ediyor muyuz?",
+      "allow_na": false
+    }
+  ]
+}

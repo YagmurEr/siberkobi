@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}SiberKOBİ · Değerlendirme{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">25 Soru · 5 Güvenlik Alanı · Öncelikli İyileştirmeler</p>
+  <h1>KOBİ'niz Siber Tehditlere Ne Kadar Hazır?</h1>
+  <p class="lead">Siber güvenlikte önemli olan yalnızca hangi ürünlere sahip olduğunuz değil, güvenlik kontrollerinizin gerçekten çalışıp çalışmadığıdır.</p>
+</section>
+
+{% if error %}
+<div class="alert" role="alert">{{ error }}</div>
+{% endif %}
+
+<form method="post" action="{{ url_for('web.result') }}">
+  {% for category in data.categories %}
+  <section class="category">
+    <h2>{{ category.name }}</h2>
+    {% for question_id in category.questions %}
+      {% set q = (data.questions | selectattr('id', 'equalto', question_id) | first) %}
+      <fieldset class="question">
+        <legend><span class="qid">{{ q.id }}</span> {{ q.text }}</legend>
+        <div class="answers">
+          {% for value, label in [('evet','Evet'),('kismen','Kısmen'),('hayir','Hayır')] %}
+          <label>
+            <input type="radio" name="{{ q.id }}" value="{{ value }}"
+              {% if previous and previous.get(q.id) == value %}checked{% endif %} required>
+            <span>{{ label }}</span>
+          </label>
+          {% endfor %}
+          {% if q.allow_na %}
+          <label>
+            <input type="radio" name="{{ q.id }}" value="uygulanamaz"
+              {% if previous and previous.get(q.id) == 'uygulanamaz' %}checked{% endif %} required>
+            <span>Uygulanamaz</span>
+          </label>
+          {% endif %}
+        </div>
+      </fieldset>
+    {% endfor %}
+  </section>
+  {% endfor %}
+  <div class="actions">
+    <button type="submit">Değerlendirmeyi tamamla</button>
+  </div>
+</form>
+{% endblock %}
