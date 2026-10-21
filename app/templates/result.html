@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}SiberKOBİ · Sonuç{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Değerlendirme sonucu</p>
+  <h1>{{ evaluation.band }}</h1>
+  <p class="lead">Genel sonuç: %{{ '%.2f'|format(evaluation.percentage) }} · {{ evaluation.earned_points }}/{{ evaluation.maximum_points }} puan</p>
+  {% if evaluation.not_applicable %}
+  <p class="muted">{{ evaluation.not_applicable }} soru uygulanamaz olarak değerlendirme dışında bırakıldı.</p>
+  {% endif %}
+</section>
+
+<section class="category">
+  <h2>Güvenlik alanları</h2>
+  <div class="result-grid">
+    {% for category in data.categories %}
+      {% set score = evaluation.by_category[category.id] %}
+      <article class="result-card">
+        <h3>{{ category.name }}</h3>
+        <p class="result-number">%{{ '%.2f'|format(score.percentage) }}</p>
+        <p class="muted">{{ score.earned }}/{{ score.maximum }} puan</p>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="category">
+  <h2>Öncelikli iyileştirmeler</h2>
+  <div class="findings">
+    {% for q in data.questions %}
+      {% if responses[q.id] in ['hayir', 'kismen'] %}
+      <article class="finding">
+        <div>
+          <span class="qid">{{ q.id }}</span>
+          <strong>{{ q.text }}</strong>
+        </div>
+        <span class="status">{{ 'Hayır' if responses[q.id] == 'hayir' else 'Kısmen' }}</span>
+      </article>
+      {% endif %}
+    {% else %}
+      <p>İyileştirme gerektiren yanıt bulunmadı.</p>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="cta">
+  <h2>Daha detaylı teknik değerlendirme gerekiyor mu?</h2>
+  <p>Bu araç hızlı bir öz değerlendirmedir. Kapsamlı teknik inceleme, doğrulama ve yol haritası için Eclipta hizmetlerini inceleyebilirsiniz.</p>
+  <a class="button-link" href="{{ cta_url }}">{{ cta_label }}</a>
+</section>
+
+<div class="actions no-print">
+  <a class="secondary-link" href="{{ url_for('web.index') }}">Değerlendirmeyi yeniden yap</a>
+  <button type="button" onclick="window.print()">Yazdır / PDF olarak kaydet</button>
+</div>
+{% endblock %}
