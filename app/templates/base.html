@@ -14,18 +14,21 @@
         <img class="site-logo" src="{{ url_for('static', filename='siberkobi-logo.svg') }}" alt="SiberKOBİ — Riskini bugün gör, yarını koru.">
       </a>
       <nav class="main-nav" aria-label="Ana menü">
-        <a href="{{ url_for('web.openscan') }}">Web Analiz</a>
-        <a href="{{ url_for('web.web_seo_audit') }}">SEO Analiz</a>
-        <a href="{{ url_for('web.assessment') }}">Siber Güvenlik Anketi</a>
+        <a href="{{ url_for('web.index') }}" class="nav-link-active">Ana Sayfa</a>
+        <a href="{{ url_for('web.index') }}#hakkinda">Hakkında</a>
       </nav>
-      <span class="brand-note">Eclipta</span>
     </div>
   </header>
-  <main class="container">
+
+  <main>
     {% block content %}{% endblock %}
   </main>
-  <footer class="container footer">
-    <p>SiberKOBİ · KOBİ'ler için açık kaynak güvenlik ve web değerlendirme araçları</p>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <a href="https://kobi.eclipta.tr/paketler">KOBİ'lere Özel</a>
+      <a href="https://eclipta.tr">eclipta.tr</a>
+    </div>
   </footer>
 </body>
 </html>
