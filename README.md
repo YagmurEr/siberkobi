@@ -13,8 +13,29 @@ SiberKOBİ, KOBİ'lerin temel siber güvenlik kontrollerini kendi kendilerine de
 - HTML sonuç ve iyileştirme raporu
 - Tarayıcı üzerinden yazdırma / PDF olarak kaydetme
 - Kullanıcı hesabı ve veritabanı gerektirmeyen yapı
+- Kalıcı değerlendirme geçmişi veya sunucu tarafı rapor arşivi yok
+- Kullanım öncesi zorunlu yetki/sorumluluk onayı
 - Docker ile kolay kurulum
 - Modüler Flask mimarisi
+
+## Veri saklama yaklaşımı
+
+SiberKOBİ varsayılan olarak stateless çalışır.
+
+- Değerlendirme yanıtları kalıcı olarak saklanmaz.
+- Geçmiş değerlendirme listesi oluşturulmaz.
+- Sunucuda HTML/PDF rapor arşivi tutulmaz.
+- Flask session kullanılmaz ve değerlendirme sonucu için session cookie oluşturulmaz.
+- Sonuç yanıtları `Cache-Control: no-store` ile döner.
+- Operasyonel loglar form yanıtlarını kaydetmez.
+
+Kullanıcı isterse sonuç ekranını tarayıcı üzerinden yazdırabilir veya kendi cihazına PDF olarak kaydedebilir.
+
+## Kullanım onayı
+
+Değerlendirme tamamlanmadan önce kullanıcı, aracı kendi kurumu, sistemleri veya değerlendirme yapmaya açıkça yetkili olduğu bir ortam için kullandığını onaylamalıdır.
+
+Onay verilmeden gönderim butonu aktif olmaz ve backend de aynı onayı ayrıca doğrular.
 
 ## Hızlı başlangıç — Docker
 
