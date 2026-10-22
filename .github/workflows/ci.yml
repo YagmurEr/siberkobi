@@ -45,6 +45,8 @@ jobs:
               "app/templates/module_placeholder.html",
               "app/templates/openscan.html",
               "app/templates/openscan_result.html",
+              "app/templates/seo_audit.html",
+              "app/templates/seo_audit_result.html",
               "app/templates/assessment.html",
               "app/templates/result.html",
               "app/static/app.css",
@@ -76,6 +78,10 @@ jobs:
           assert "SEO Analiz" in body
 
           response = client.get("/openscan")
+          assert response.status_code == 200
+          assert 'name="target"' in response.get_data(as_text=True)
+
+          response = client.get("/web-seo-audit")
           assert response.status_code == 200
           assert 'name="target"' in response.get_data(as_text=True)
 
@@ -111,6 +117,7 @@ jobs:
           curl --fail --silent http://127.0.0.1:8000/ | grep -q "Web Analiz"
           curl --fail --silent http://127.0.0.1:8000/ | grep -q "SEO Analiz"
           curl --fail --silent http://127.0.0.1:8000/openscan | grep -q 'name="target"'
+          curl --fail --silent http://127.0.0.1:8000/web-seo-audit | grep -q 'name="target"'
           curl --fail --silent http://127.0.0.1:8000/assessment | grep -q "SK-T01"
           curl --fail --silent http://127.0.0.1:8000/assessment | grep -q "SK-T25"
       - name: Stop container
