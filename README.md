@@ -16,40 +16,11 @@ SiberKOBİ, KOBİ'lerin temel siber güvenlik kontrollerini kendi kendilerine de
 - Docker ile kolay kurulum
 - Modüler Flask mimarisi
 
-## Mimari ilkeler
-
-- Eclipta Suite kaynak kodu kullanılmaz veya kopyalanmaz.
-- Sorular ve değerlendirme kuralları uygulama kodundan ayrıdır.
-- İlk sürümde AI veya harici API gereksinimi yoktur.
-- Kalıcı kullanıcı verisi tutulmaz.
-- Güvenli varsayılanlar, test edilebilirlik ve anlamlı loglama temel gereksinimdir.
-- Public yayına geçmeden önce güvenlik, hassas veri ve lisans kontrolü yapılır.
-
-## Yerel çalıştırma
-
-Python 3.13 önerilir.
+## Hızlı başlangıç — Docker
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev]"
-flask --app app:create_app run
-```
-
-Windows PowerShell:
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -e ".[dev]"
-flask --app app:create_app run
-```
-
-Uygulama varsayılan olarak Flask'ın yerel geliştirme adresinde açılır.
-
-## Docker
-
-```bash
+git clone https://github.com/YagmurEr/siberkobi.git
+cd siberkobi
 docker compose up --build
 ```
 
@@ -65,16 +36,48 @@ Health endpoint:
 http://localhost:8000/health
 ```
 
-## Test ve kalite kontrolleri
+## Python ile çalıştırma
+
+Python 3.13 veya üzeri:
 
 ```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install .
+flask --app app:create_app run
+```
+
+Windows PowerShell:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install .
+flask --app app:create_app run
+```
+
+Ayrıntılı dağıtım seçenekleri için `docs/DISTRIBUTION.md` dosyasına bakın.
+
+## Geliştirme ortamı
+
+```bash
+pip install -e ".[dev]"
 ruff check .
 pytest -q
 bandit -r app
 pip-audit
+python -m build
 ```
 
-Bu kontroller GitHub Actions üzerinde de çalıştırılır.
+Bu kontroller ve Docker image build doğrulaması GitHub Actions üzerinde çalıştırılır.
+
+## Mimari ilkeler
+
+- Eclipta Suite kaynak kodu kullanılmaz veya kopyalanmaz.
+- Sorular ve değerlendirme kuralları uygulama kodundan ayrıdır.
+- İlk sürümde AI veya harici API gereksinimi yoktur.
+- Kalıcı kullanıcı verisi tutulmaz.
+- Güvenli varsayılanlar, test edilebilirlik ve anlamlı loglama temel gereksinimdir.
 
 ## Proje yapısı
 
@@ -98,10 +101,10 @@ compose.yaml
 
 Puanlama ve sonuç bantları `docs/ARCHITECTURE.md` içinde belgelenmiştir.
 
-## Durum
+## Dağıtım
 
-İlk açık kaynak sürüm geliştirme ve güvenlik doğrulama aşamasındadır. Repository, public release kontrolü tamamlanana kadar private tutulacaktır.
+SiberKOBİ; Docker/Compose, doğrudan Python kurulumu ve GitHub release kaynak arşivleriyle dağıtılabilir. CI, Python wheel paketinin gerekli JSON/template/static dosyalarını içerdiğini doğrular.
 
 ## Lisans
 
-Lisans kararı public release öncesinde kesinleştirilecektir.
+SiberKOBİ MIT License altında yayımlanır. Ayrıntılar için `LICENSE` dosyasına bakın.
