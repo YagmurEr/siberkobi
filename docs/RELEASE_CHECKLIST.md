@@ -18,11 +18,17 @@ The repository must remain private until all release-blocking items below are co
 - [x] SECURITY.md is present.
 - [x] CONTRIBUTING.md is present.
 - [x] Direct dependency licenses are documented.
+- [x] Distribution guide is present.
 
 ## Licensing
-- [ ] Project license selected.
-- [ ] LICENSE file added.
-- [ ] Dependency license review confirmed against selected project license.
+- [x] Project license selected: MIT.
+- [x] LICENSE file added.
+- [x] Direct dependency license review is compatible with MIT distribution.
+
+## Packaging
+- [ ] Python source/wheel distributions build successfully in CI.
+- [ ] Wheel contains assessment JSON, HTML templates, CSS and JavaScript assets.
+- [x] Docker image build passes in CI.
 
 ## Release
 - [ ] Final CI is green on `main`.
