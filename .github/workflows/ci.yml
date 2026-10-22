@@ -26,6 +26,31 @@ jobs:
         run: bandit -r app
       - name: Dependency audit
         run: pip-audit
+      - name: Build Python distributions
+        run: python -m build
+      - name: Verify wheel contains runtime assets
+        run: |
+          python - <<'PY'
+          import glob
+          import zipfile
+
+          wheel = glob.glob("dist/*.whl")[0]
+          with zipfile.ZipFile(wheel) as archive:
+              names = set(archive.namelist())
+
+          required = {
+              "app/assessment/questions.json",
+              "app/templates/base.html",
+              "app/templates/assessment.html",
+              "app/templates/result.html",
+              "app/static/app.css",
+              "app/static/app.js",
+          }
+          missing = sorted(required - names)
+          if missing:
+              raise SystemExit(f"Wheel is missing runtime assets: {missing}")
+          print(f"Verified runtime assets in {wheel}")
+          PY
 
   docker:
     runs-on: ubuntu-latest
