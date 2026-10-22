@@ -26,11 +26,11 @@ The repository must remain private until all release-blocking items below are co
 - [x] Direct dependency license review is compatible with MIT distribution.
 
 ## Packaging
-- [ ] Python source/wheel distributions build successfully in CI.
-- [ ] Wheel contains assessment JSON, HTML templates, CSS and JavaScript assets.
+- [x] Python source/wheel distributions build successfully in CI.
+- [x] Wheel contains assessment JSON, HTML templates, CSS and JavaScript assets.
 - [x] Docker image build passes in CI.
 
 ## Release
-- [ ] Final CI is green on `main`.
+- [x] Final CI is green on `main`.
 - [ ] Repository visibility changed from private to public.
 - [ ] First public release/tag created.
