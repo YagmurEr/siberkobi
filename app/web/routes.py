@@ -2,6 +2,7 @@ from flask import Blueprint, current_app, render_template, request
 
 from app.assessment.loader import load_assessment
 from app.evaluation.engine import evaluate
+from app.seoaudit.audit import run_seo_audit
 from app.webscan.scanner import ScanValidationError, run_web_analysis
 
 web_bp = Blueprint("web", __name__)
@@ -55,16 +56,34 @@ def openscan_result():
 
 @web_bp.get("/web-seo-audit")
 def web_seo_audit():
-    return render_template(
-        "module_placeholder.html",
-        module_name="SEO Analiz",
-        eyebrow="Teknik SEO ve Web Kontrolleri",
-        description=(
-            "Title, meta, başlık yapısı, canonical, robots.txt, sitemap, "
-            "structured data ve temel web kalite kontrolleri."
-        ),
-        status="Geliştirme aşamasında",
+    return render_template("seo_audit.html")
+
+
+@web_bp.post("/web-seo-audit/sonuc")
+def web_seo_audit_result():
+    target = request.form.get("target", "").strip()
+
+    if request.form.get(_AUTHORIZATION_FIELD) != _AUTHORIZATION_VALUE:
+        return (
+            render_template(
+                "seo_audit.html",
+                error="Devam etmek için bu siteyi değerlendirmeye yetkili olduğunuzu onaylayın.",
+                target=target,
+            ),
+            400,
+        )
+
+    try:
+        report = run_seo_audit(target)
+    except ScanValidationError as exc:
+        return render_template("seo_audit.html", error=str(exc), target=target), 400
+
+    current_app.logger.info(
+        "seo_analysis_completed target=%s findings=%s",
+        report["final_url"],
+        report["summary"]["findings_total"],
     )
+    return render_template("seo_audit_result.html", report=report)
 
 
 @web_bp.post("/sonuc")
