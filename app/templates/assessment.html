@@ -11,7 +11,7 @@
 <div class="alert" role="alert">{{ error }}</div>
 {% endif %}
 
-<form method="post" action="{{ url_for('web.result') }}">
+<form method="post" action="{{ url_for('web.result') }}" data-assessment-form>
   {% for category in data.categories %}
   <section class="category">
     <h2>{{ category.name }}</h2>
@@ -39,8 +39,30 @@
     {% endfor %}
   </section>
   {% endfor %}
+
+  <section class="authorization">
+    <h2>Kullanım Onayı</h2>
+    <p>
+      Bu değerlendirmeyi yalnızca kendi kurumunuz, sistemleriniz veya değerlendirme
+      yapmaya açıkça yetkili olduğunuz bir ortam için kullanın.
+    </p>
+    <label class="authorization-check">
+      <input
+        type="checkbox"
+        name="authorization_confirmed"
+        value="yes"
+        data-authorization-checkbox
+        {% if authorization_confirmed %}checked{% endif %}
+        required>
+      <span>
+        Bu değerlendirmeyi kendi kurumum, sistemlerim veya değerlendirme yapmaya
+        yetkili olduğum bir ortam için kullandığımı onaylıyorum.
+      </span>
+    </label>
+  </section>
+
   <div class="actions">
-    <button type="submit">Değerlendirmeyi tamamla</button>
+    <button type="submit" data-submit-button disabled>Değerlendirmeyi tamamla</button>
   </div>
 </form>
 {% endblock %}
