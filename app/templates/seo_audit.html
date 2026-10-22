@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}SiberKOBİ · SEO Analiz{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Teknik SEO ve Web Kontrolleri</p>
+  <h1>SEO Analiz</h1>
+  <p class="lead">
+    Web sitenizin temel teknik SEO yapısını, taranabilirliğini ve sayfa
+    işaretlemelerini hızlı ve sınırlı bir kontrolle değerlendirin.
+  </p>
+</section>
+
+{% if error %}
+<p class="alert">{{ error }}</p>
+{% endif %}
+
+<form method="post" action="{{ url_for('web.web_seo_audit_result') }}" class="scan-form">
+  <label for="target"><strong>Web sitesi</strong></label>
+  <input id="target" name="target" type="text" inputmode="url"
+         placeholder="https://example.com" value="{{ target or '' }}" required>
+
+  <div class="authorization">
+    <h2>Kullanım Onayı</h2>
+    <p>
+      SEO analizi yalnızca herkese açık web içeriğini okur. Yine de bu aracı
+      kendi siteniz veya değerlendirmeye yetkili olduğunuz bir site için kullanın.
+    </p>
+    <label class="authorization-check">
+      <input type="checkbox" name="authorization_confirmed" value="yes" required>
+      <span>Bu siteyi değerlendirmeye yetkili olduğumu onaylıyorum.</span>
+    </label>
+  </div>
+
+  <div class="actions">
+    <button type="submit">SEO Analizini Başlat</button>
+    <a class="secondary-link" href="{{ url_for('web.index') }}">Ana sayfaya dön</a>
+  </div>
+</form>
+
+<section class="module-status-card">
+  <p class="module-kicker">Kontrol kapsamı</p>
+  <p>
+    Title/meta, H1/H2, canonical, viewport, robots.txt, sitemap.xml,
+    Open Graph, Twitter/X meta, JSON-LD, görsel alt metinleri, sınırlı iç link
+    kontrolü ve temel HTTP yanıt göstergeleri.
+  </p>
+</section>
+{% endblock %}
