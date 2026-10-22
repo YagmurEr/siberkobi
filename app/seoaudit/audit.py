@@ -53,9 +53,8 @@ class _SEOParser(HTMLParser):
             self.images_total += 1
             if not data.get("alt", "").strip():
                 self.images_missing_alt += 1
-        elif tag == "script":
-            if data.get("type", "").lower() == "application/ld+json":
-                self.json_ld_count += 1
+        elif tag == "script" and data.get("type", "").lower() == "application/ld+json":
+            self.json_ld_count += 1
 
     def handle_endtag(self, tag: str) -> None:
         tag = tag.lower()
