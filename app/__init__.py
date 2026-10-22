@@ -37,7 +37,7 @@ def create_app() -> Flask:
             "default-src 'self'; "
             "style-src 'self'; "
             "script-src 'self'; "
-            "img-src 'self' data:; "
+            "img-src 'self' data: https://upload.wikimedia.org; "
             "base-uri 'self'; "
             "frame-ancestors 'none'"
         )
