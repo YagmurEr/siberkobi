@@ -46,7 +46,8 @@ jobs:
               "app/templates/assessment.html",
               "app/templates/result.html",
               "app/static/app.css",
-              "app/static/app.js",\n              "app/static/istanbul-hero.svg",
+              "app/static/app.js",
+              "app/static/istanbul-hero.svg",
           }
           missing = sorted(required - names)
           if missing:
