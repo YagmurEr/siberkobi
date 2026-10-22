@@ -38,4 +38,5 @@ app = [
   "templates/*.html",
   "static/*.css",
   "static/*.js",
+  "static/*.svg",
 ]

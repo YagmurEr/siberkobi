@@ -11,6 +11,11 @@
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand" href="{{ url_for('web.index') }}">SiberKOBİ</a>
+      <nav class="main-nav" aria-label="Ana menü">
+        <a href="{{ url_for('web.openscan') }}">Web Analiz</a>
+        <a href="{{ url_for('web.web_seo_audit') }}">SEO Analiz</a>
+        <a href="{{ url_for('web.assessment') }}">Siber Güvenlik Anketi</a>
+      </nav>
       <span class="brand-note">Eclipta</span>
     </div>
   </header>
@@ -18,7 +23,7 @@
     {% block content %}{% endblock %}
   </main>
   <footer class="container footer">
-    <p>SiberKOBİ · Açık kaynak siber güvenlik öz değerlendirme aracı</p>
+    <p>SiberKOBİ · KOBİ'ler için açık kaynak güvenlik ve web değerlendirme araçları</p>
   </footer>
 </body>
 </html>

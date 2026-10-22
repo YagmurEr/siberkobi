@@ -7,9 +7,21 @@ def _valid_submission() -> dict[str, str]:
     return data
 
 
-def test_index_renders_all_questions_and_authorization_gate() -> None:
+def test_index_renders_product_landing_page() -> None:
     client = create_app().test_client()
     response = client.get("/")
+
+    assert response.status_code == 200
+    body = response.get_data(as_text=True)
+    assert "Siber Güvenlik Anketi" in body
+    assert "Web Analiz" in body
+    assert "SEO Analiz" in body
+    assert "SK-T01" not in body
+
+
+def test_assessment_renders_all_questions_and_authorization_gate() -> None:
+    client = create_app().test_client()
+    response = client.get("/assessment")
 
     assert response.status_code == 200
     body = response.get_data(as_text=True)
@@ -17,6 +29,18 @@ def test_index_renders_all_questions_and_authorization_gate() -> None:
     assert "SK-T25" in body
     assert 'name="authorization_confirmed"' in body
     assert "Değerlendirmeyi tamamla" in body
+
+
+def test_module_entry_pages_render() -> None:
+    client = create_app().test_client()
+
+    openscan = client.get("/openscan")
+    seo = client.get("/web-seo-audit")
+
+    assert openscan.status_code == 200
+    assert "Web Analiz" in openscan.get_data(as_text=True)
+    assert seo.status_code == 200
+    assert "SEO Analiz" in seo.get_data(as_text=True)
 
 
 def test_result_rejects_missing_authorization() -> None:

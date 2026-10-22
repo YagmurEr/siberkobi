@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}SiberKOBİ · {{ module_name }}{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">{{ eyebrow }}</p>
+  <h1>{{ module_name }}</h1>
+  <p class="lead">{{ description }}</p>
+</section>
+
+<section class="module-status-card">
+  <p class="module-kicker">{{ status }}</p>
+  <h2>Bu modül SiberKOBİ v0.2 kapsamında geliştiriliyor.</h2>
+  <p>
+    Ana ürün mimarisi hazırlandı. Fonksiyonel tarama motoru ve sonuç ekranları
+    sıradaki geliştirme fazında eklenecek.
+  </p>
+  <a class="secondary-link" href="{{ url_for('web.index') }}">← Ana sayfaya dön</a>
+</section>
+{% endblock %}
