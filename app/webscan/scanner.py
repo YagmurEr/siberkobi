@@ -3,8 +3,8 @@ from __future__ import annotations
 import ipaddress
 import socket
 import ssl
-from dataclasses import dataclass, asdict
-from datetime import datetime, timezone
+from dataclasses import asdict, dataclass
+from datetime import UTC, datetime
 from http.client import HTTPConnection, HTTPSConnection
 from urllib.parse import urlsplit
 
@@ -135,8 +135,10 @@ def fetch_http_headers(host: str, use_tls: bool, port: int, timeout: float = 3.0
 def inspect_tls(host: str, timeout: float = 3.0) -> dict:
     context = ssl.create_default_context()
     try:
-        with socket.create_connection((host, 443), timeout=timeout) as sock:
-            with context.wrap_socket(sock, server_hostname=host) as tls:
+        with (
+            socket.create_connection((host, 443), timeout=timeout) as sock,
+            context.wrap_socket(sock, server_hostname=host) as tls,
+        ):
                 cert = tls.getpeercert()
                 cipher = tls.cipher()
                 not_after = cert.get("notAfter")
@@ -145,8 +147,8 @@ def inspect_tls(host: str, timeout: float = 3.0) -> dict:
                 if not_after:
                     expires_at = datetime.strptime(
                         not_after, "%b %d %H:%M:%S %Y %Z"
-                    ).replace(tzinfo=timezone.utc)
-                    days_remaining = (expires_at - datetime.now(timezone.utc)).days
+                    ).replace(tzinfo=UTC)
+                    days_remaining = (expires_at - datetime.now(UTC)).days
 
                 subject = {}
                 for group in cert.get("subject", ()):
