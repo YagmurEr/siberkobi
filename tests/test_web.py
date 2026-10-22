@@ -15,7 +15,7 @@ def test_index_renders_product_landing_page() -> None:
     body = response.get_data(as_text=True)
     assert "Siber Güvenlik Öz Değerlendirme" in body
     assert "OpenScan" in body
-    assert "Web &amp; SEO Audit" in body
+    assert "Web & SEO Audit" in body
     assert "SK-T01" not in body
 
 
@@ -40,7 +40,7 @@ def test_module_entry_pages_render() -> None:
     assert openscan.status_code == 200
     assert "OpenScan" in openscan.get_data(as_text=True)
     assert seo.status_code == 200
-    assert "Web &amp; SEO Audit" in seo.get_data(as_text=True)
+    assert "Web & SEO Audit" in seo.get_data(as_text=True)
 
 
 def test_result_rejects_missing_authorization() -> None:
