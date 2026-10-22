@@ -234,3 +234,8 @@ button:disabled { opacity: .55; cursor: not-allowed; }
 @media (max-width: 820px) {
   .site-logo { width: 150px; height: 56px; }
 }
+
+.url-cell {
+  max-width: 620px;
+  overflow-wrap: anywhere;
+}
