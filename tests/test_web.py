@@ -13,9 +13,9 @@ def test_index_renders_product_landing_page() -> None:
 
     assert response.status_code == 200
     body = response.get_data(as_text=True)
-    assert "Siber Güvenlik Öz Değerlendirme" in body
-    assert "OpenScan" in body
-    assert "Web & SEO Audit" in body
+    assert "Siber Güvenlik Anketi" in body
+    assert "Web Analiz" in body
+    assert "SEO Analiz" in body
     assert "SK-T01" not in body
 
 
