@@ -38,9 +38,9 @@ def test_module_entry_pages_render() -> None:
     seo = client.get("/web-seo-audit")
 
     assert openscan.status_code == 200
-    assert "OpenScan" in openscan.get_data(as_text=True)
+    assert "Web Analiz" in openscan.get_data(as_text=True)
     assert seo.status_code == 200
-    assert "Web & SEO Audit" in seo.get_data(as_text=True)
+    assert "SEO Analiz" in seo.get_data(as_text=True)
 
 
 def test_result_rejects_missing_authorization() -> None:
