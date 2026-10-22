@@ -5,6 +5,9 @@ from app.evaluation.engine import evaluate
 
 web_bp = Blueprint("web", __name__)
 
+_AUTHORIZATION_FIELD = "authorization_confirmed"
+_AUTHORIZATION_VALUE = "yes"
+
 
 @web_bp.get("/")
 def index():
@@ -20,6 +23,22 @@ def result():
         for question in data["questions"]
     }
 
+    if request.form.get(_AUTHORIZATION_FIELD) != _AUTHORIZATION_VALUE:
+        return (
+            render_template(
+                "assessment.html",
+                data=data,
+                error=(
+                    "Değerlendirmeye devam etmek için bu aracı kendi kurumunuz, "
+                    "sistemleriniz veya değerlendirme yapmaya yetkili olduğunuz "
+                    "bir ortam için kullandığınızı onaylamanız gerekir."
+                ),
+                previous=responses,
+                authorization_confirmed=False,
+            ),
+            400,
+        )
+
     try:
         evaluation = evaluate(responses)
     except ValueError as exc:
@@ -29,6 +48,7 @@ def result():
                 data=data,
                 error=str(exc),
                 previous=responses,
+                authorization_confirmed=True,
             ),
             400,
         )
