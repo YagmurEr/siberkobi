@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}SiberKOBİ · Web Analiz{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">Güvenlik Görünürlüğü</p>
+  <h1>Web Analiz</h1>
+  <p class="lead">
+    Yetkili olduğunuz internet üzerindeki bir alan adının temel web güvenliği
+    görünürlüğünü düşük yoğunluklu kontrollerle değerlendirin.
+  </p>
+</section>
+
+{% if error %}
+<p class="alert">{{ error }}</p>
+{% endif %}
+
+<form method="post" action="{{ url_for('web.openscan_result') }}" class="scan-form">
+  <label for="target"><strong>Alan adı</strong></label>
+  <input id="target" name="target" type="text" inputmode="url"
+         placeholder="example.com" value="{{ target or '' }}" required>
+
+  <div class="authorization">
+    <h2>Kullanım Onayı</h2>
+    <p>
+      Bu aracı yalnızca sahibi olduğunuz veya güvenlik değerlendirmesi yapmaya
+      açıkça yetkili olduğunuz internet hedefleri için kullanın.
+    </p>
+    <label class="authorization-check">
+      <input type="checkbox" name="authorization_confirmed" value="yes" required>
+      <span>Bu hedefi değerlendirmeye yetkili olduğumu onaylıyorum.</span>
+    </label>
+  </div>
+
+  <div class="actions">
+    <button type="submit">Web Analizini Başlat</button>
+    <a class="secondary-link" href="{{ url_for('web.index') }}">Ana sayfaya dön</a>
+  </div>
+</form>
+
+<section class="module-status-card">
+  <p class="module-kicker">Kontrol kapsamı</p>
+  <p>
+    DNS çözümleme, 80/443/8080/8443 web portları, HTTP/HTTPS yanıtları,
+    TLS sertifikası ve güvenlik başlıkları. Private ve local hedefler reddedilir.
+  </p>
+</section>
+{% endblock %}
