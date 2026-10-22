@@ -1,44 +1,82 @@
 {% extends "base.html" %}
 {% block title %}SiberKOBİ · Ana Sayfa{% endblock %}
 {% block content %}
-<section class="hero landing-hero">
-  <p class="eyebrow">KOBİ'ler için açık kaynak güvenlik ve web değerlendirme araçları</p>
-  <h1>SiberKOBİ</h1>
-  <p class="lead">
-    Siber güvenlik hazırlığınızı değerlendirin, dış görünürlüğünüzü kontrol edin
-    ve web sitenizin teknik SEO yapısını inceleyin.
-  </p>
+<section class="landing-hero landing-hero--istanbul">
+  <div class="landing-hero-overlay"></div>
+  <div class="landing-hero-content">
+    <p class="eyebrow eyebrow-light">Ücretsiz · Açık Kaynak · KOBİ Odaklı</p>
+    <h1>KOBİ’nizin dijital görünürlüğünü ve güvenlik hazırlığını tek noktadan değerlendirin.</h1>
+    <p class="lead lead-light">
+      Web görünürlüğünüzü keşfedin, teknik SEO durumunuzu inceleyin ve 25 soruluk
+      siber güvenlik öz değerlendirmesiyle güçlü ve zayıf alanlarınızı görün.
+    </p>
+    <div class="hero-points" aria-label="SiberKOBİ özellikleri">
+      <span>Kurulum gerektirmeyen kullanım</span>
+      <span>Kayıt ve hesap zorunluluğu yok</span>
+      <span>Pratik ve anlaşılır sonuçlar</span>
+    </div>
+  </div>
+</section>
+
+<section class="module-intro">
+  <p class="eyebrow">SiberKOBİ Araçları</p>
+  <h2>İhtiyacınıza göre bir modül seçin</h2>
+  <p>Her modül ayrı değerlendirme yapar; sonuçlar birbirinden bağımsızdır.</p>
 </section>
 
 <section class="module-grid" aria-label="SiberKOBİ modülleri">
-  <article class="module-card">
+  <article class="module-card module-card--web">
+    <div class="module-number">01</div>
+    <div class="module-icon" aria-hidden="true">W</div>
+    <p class="module-kicker">Web Görünürlüğü</p>
+    <h2>Web Analiz</h2>
+    <p>
+      Yetkili hedeflerde dışarıdan görünen temel güvenlik yüzeyini inceleyin:
+      DNS, SSL/TLS, security headers, servis ve zafiyet görünürlüğü.
+    </p>
+    <ul class="module-list">
+      <li>DNS ve temel servis görünürlüğü</li>
+      <li>SSL/TLS kontrolleri</li>
+      <li>Security headers</li>
+      <li>CVE / KEV odaklı bulgular</li>
+    </ul>
+    <a class="button-link" href="{{ url_for('web.openscan') }}">Web Analizi</a>
+  </article>
+
+  <article class="module-card module-card--seo">
+    <div class="module-number">02</div>
+    <div class="module-icon" aria-hidden="true">S</div>
+    <p class="module-kicker">Teknik Görünürlük</p>
+    <h2>SEO Analiz</h2>
+    <p>
+      Web sitenizin teknik SEO yapısını, taranabilirliğini ve temel sayfa
+      işaretlemelerini kontrol edin.
+    </p>
+    <ul class="module-list">
+      <li>Title, meta ve başlık yapısı</li>
+      <li>Canonical ve robots.txt</li>
+      <li>Sitemap ve bağlantı kontrolleri</li>
+      <li>Open Graph, JSON-LD ve alt metinler</li>
+    </ul>
+    <a class="button-link secondary-button" href="{{ url_for('web.web_seo_audit') }}">SEO Analizi</a>
+  </article>
+
+  <article class="module-card module-card--survey">
+    <div class="module-number">03</div>
+    <div class="module-icon" aria-hidden="true">25</div>
     <p class="module-kicker">Hazır</p>
-    <h2>Siber Güvenlik Öz Değerlendirme</h2>
+    <h2>Siber Güvenlik Anketi</h2>
     <p>
-      25 teknik soru ve 5 güvenlik alanı üzerinden mevcut kontrollerinizi
-      deterministik olarak değerlendirin.
+      5 güvenlik alanında 25 teknik soruyla mevcut güvenlik kontrollerinizin
+      gerçekten çalışıp çalışmadığını değerlendirin.
     </p>
-    <a class="button-link" href="{{ url_for('web.assessment') }}">Değerlendirmeyi başlat</a>
-  </article>
-
-  <article class="module-card">
-    <p class="module-kicker">Geliştiriliyor</p>
-    <h2>OpenScan</h2>
-    <p>
-      Yetkili hedeflerde temel güvenlik görünürlüğü, SSL/TLS, security headers,
-      DNS, servis ve zafiyet kontrolleri.
-    </p>
-    <a class="button-link secondary-button" href="{{ url_for('web.openscan') }}">Modülü görüntüle</a>
-  </article>
-
-  <article class="module-card">
-    <p class="module-kicker">Geliştiriliyor</p>
-    <h2>Web & SEO Audit</h2>
-    <p>
-      Teknik SEO, meta yapısı, sitemap, robots.txt, structured data ve temel
-      web kalite kontrolleri.
-    </p>
-    <a class="button-link secondary-button" href="{{ url_for('web.web_seo_audit') }}">Modülü görüntüle</a>
+    <ul class="module-list">
+      <li>25 teknik soru</li>
+      <li>5 güvenlik alanı</li>
+      <li>Anında sonuç ve önceliklendirme</li>
+      <li>Kayıt tutulmayan stateless yapı</li>
+    </ul>
+    <a class="button-link survey-button" href="{{ url_for('web.assessment') }}">Anketi Başlat</a>
   </article>
 </section>
 {% endblock %}
