@@ -27,16 +27,14 @@
 <section class="category">
   <h2>Öncelikli iyileştirmeler</h2>
   <div class="findings">
-    {% for q in data.questions %}
-      {% if responses[q.id] in ['hayir', 'kismen'] %}
+    {% for finding in findings %}
       <article class="finding">
         <div>
-          <span class="qid">{{ q.id }}</span>
-          <strong>{{ q.text }}</strong>
+          <span class="qid">{{ finding.id }}</span>
+          <strong>{{ finding.text }}</strong>
         </div>
-        <span class="status">{{ 'Hayır' if responses[q.id] == 'hayir' else 'Kısmen' }}</span>
+        <span class="status">{{ 'Hayır' if finding.response == 'hayir' else 'Kısmen' }}</span>
       </article>
-      {% endif %}
     {% else %}
       <p>İyileştirme gerektiren yanıt bulunmadı.</p>
     {% endfor %}
