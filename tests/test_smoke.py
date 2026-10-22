@@ -28,6 +28,7 @@ def test_result_page_is_not_cached() -> None:
     app = create_app()
     client = app.test_client()
     data = {f"SK-T{i:02d}": "evet" for i in range(1, 26)}
+    data["authorization_confirmed"] = "yes"
 
     response = client.post("/sonuc", data=data)
 
