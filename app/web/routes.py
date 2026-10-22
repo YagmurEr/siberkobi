@@ -24,7 +24,7 @@ def assessment():
 def openscan():
     return render_template(
         "module_placeholder.html",
-        module_name="OpenScan",
+        module_name="Web Analiz",
         eyebrow="Güvenlik Görünürlüğü",
         description=(
             "Yetkili hedeflerde temel güvenlik görünürlüğü, SSL/TLS, "
@@ -38,7 +38,7 @@ def openscan():
 def web_seo_audit():
     return render_template(
         "module_placeholder.html",
-        module_name="Web & SEO Audit",
+        module_name="SEO Analiz",
         eyebrow="Teknik SEO ve Web Kontrolleri",
         description=(
             "Title, meta, başlık yapısı, canonical, robots.txt, sitemap, "
