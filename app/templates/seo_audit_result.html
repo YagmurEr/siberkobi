@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block title %}SiberKOBİ · SEO Analiz Sonucu{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">SEO Analiz Sonucu</p>
+  <h1>{{ report.final_url }}</h1>
+  <p class="lead">Temel teknik SEO ve taranabilirlik kontrolü tamamlandı.</p>
+</section>
+
+<section class="result-grid">
+  <article class="result-card">
+    <h3>Toplam bulgu</h3>
+    <p class="result-number">{{ report.summary.findings_total }}</p>
+  </article>
+  <article class="result-card">
+    <h3>Yüksek</h3>
+    <p class="result-number">{{ report.summary.high }}</p>
+  </article>
+  <article class="result-card">
+    <h3>Kırık link</h3>
+    <p class="result-number">{{ report.summary.broken_links }}</p>
+  </article>
+  <article class="result-card">
+    <h3>Yanıt süresi</h3>
+    <p class="result-number">{{ report.elapsed_ms }} ms</p>
+  </article>
+</section>
+
+<section class="scan-section">
+  <h2>Sayfa temelleri</h2>
+  <div class="scan-table-wrap">
+    <table class="scan-table">
+      <tbody>
+        <tr><th>HTTP durum</th><td>{{ report.status }}</td></tr>
+        <tr><th>Title</th><td>{{ report.title or "Yok" }} ({{ report.title_length }})</td></tr>
+        <tr><th>Meta description</th><td>{{ report.description or "Yok" }} ({{ report.description_length }})</td></tr>
+        <tr><th>H1 sayısı</th><td>{{ report.headings.h1 | length }}</td></tr>
+        <tr><th>H2 sayısı</th><td>{{ report.headings.h2 | length }}</td></tr>
+        <tr><th>Canonical</th><td>{{ report.canonical or "Yok" }}</td></tr>
+        <tr><th>Viewport</th><td>{{ report.viewport or "Yok" }}</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="scan-section">
+  <h2>Tarama ve indeksleme</h2>
+  <div class="result-grid">
+    <article class="result-card">
+      <h3>robots.txt</h3>
+      <p>{{ "Erişilebilir" if report.robots.ok else "Erişilemiyor" }}</p>
+      {% if report.robots.status %}<p class="muted">HTTP {{ report.robots.status }}</p>{% endif %}
+    </article>
+    <article class="result-card">
+      <h3>sitemap.xml</h3>
+      <p>{{ "Erişilebilir" if report.sitemap.ok else "Erişilemiyor" }}</p>
+      {% if report.sitemap.status %}<p class="muted">HTTP {{ report.sitemap.status }}</p>{% endif %}
+    </article>
+    <article class="result-card">
+      <h3>Meta robots</h3>
+      <p>{{ report.robots_meta or "Tanımlı değil" }}</p>
+    </article>
+  </div>
+</section>
+
+<section class="scan-section">
+  <h2>Sosyal ve yapılandırılmış veri</h2>
+  <div class="scan-table-wrap">
+    <table class="scan-table">
+      <tbody>
+        <tr><th>Open Graph title</th><td>{{ report.og.title or "Yok" }}</td></tr>
+        <tr><th>Open Graph description</th><td>{{ report.og.description or "Yok" }}</td></tr>
+        <tr><th>Twitter/X card</th><td>{{ report.twitter_card or "Yok" }}</td></tr>
+        <tr><th>JSON-LD blok sayısı</th><td>{{ report.json_ld_count }}</td></tr>
+        <tr><th>Görsel</th><td>{{ report.images_total }}</td></tr>
+        <tr><th>Alt metni eksik görsel</th><td>{{ report.images_missing_alt }}</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="scan-section">
+  <h2>İç bağlantı örneklemi</h2>
+  {% if report.links_checked %}
+  <div class="scan-table-wrap">
+    <table class="scan-table">
+      <thead><tr><th>URL</th><th>Durum</th></tr></thead>
+      <tbody>
+      {% for item in report.links_checked %}
+        <tr>
+          <td class="url-cell">{{ item.url }}</td>
+          <td>{{ item.status if item.status is not none else "Hata" }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="module-status-card">Kontrol edilecek aynı-host bağlantı örneği bulunamadı.</p>
+  {% endif %}
+</section>
+
+<section class="scan-section">
+  <h2>Bulgular</h2>
+  {% if report.findings %}
+  <div class="findings">
+    {% for finding in report.findings %}
+    <article class="finding">
+      <div>
+        <strong>{{ finding.title }}</strong>
+        <p>{{ finding.detail }}</p>
+      </div>
+      <span class="status">{{ finding.severity | upper }}</span>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="module-status-card">Bu temel kontrolde raporlanacak SEO bulgusu oluşmadı.</p>
+  {% endif %}
+</section>
+
+<div class="actions no-print">
+  <a class="button-link" href="{{ url_for('web.web_seo_audit') }}">Yeni SEO Analizi</a>
+  <button type="button" data-action="print">Yazdır / PDF</button>
+</div>
+{% endblock %}
