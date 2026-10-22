@@ -10,7 +10,9 @@
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" href="{{ url_for('web.index') }}">SiberKOBİ</a>
+      <a class="brand brand-logo-link" href="{{ url_for('web.index') }}" aria-label="SiberKOBİ ana sayfa">
+        <img class="site-logo" src="{{ url_for('static', filename='siberkobi-logo.svg') }}" alt="SiberKOBİ — Riskini bugün gör, yarını koru.">
+      </a>
       <nav class="main-nav" aria-label="Ana menü">
         <a href="{{ url_for('web.openscan') }}">Web Analiz</a>
         <a href="{{ url_for('web.web_seo_audit') }}">SEO Analiz</a>
