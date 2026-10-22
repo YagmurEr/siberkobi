@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}SiberKOBİ · Ana Sayfa{% endblock %}
+{% block content %}
+<section class="hero landing-hero">
+  <p class="eyebrow">KOBİ'ler için açık kaynak güvenlik ve web değerlendirme araçları</p>
+  <h1>SiberKOBİ</h1>
+  <p class="lead">
+    Siber güvenlik hazırlığınızı değerlendirin, dış görünürlüğünüzü kontrol edin
+    ve web sitenizin teknik SEO yapısını inceleyin.
+  </p>
+</section>
+
+<section class="module-grid" aria-label="SiberKOBİ modülleri">
+  <article class="module-card">
+    <p class="module-kicker">Hazır</p>
+    <h2>Siber Güvenlik Öz Değerlendirme</h2>
+    <p>
+      25 teknik soru ve 5 güvenlik alanı üzerinden mevcut kontrollerinizi
+      deterministik olarak değerlendirin.
+    </p>
+    <a class="button-link" href="{{ url_for('web.assessment') }}">Değerlendirmeyi başlat</a>
+  </article>
+
+  <article class="module-card">
+    <p class="module-kicker">Geliştiriliyor</p>
+    <h2>OpenScan</h2>
+    <p>
+      Yetkili hedeflerde temel güvenlik görünürlüğü, SSL/TLS, security headers,
+      DNS, servis ve zafiyet kontrolleri.
+    </p>
+    <a class="button-link secondary-button" href="{{ url_for('web.openscan') }}">Modülü görüntüle</a>
+  </article>
+
+  <article class="module-card">
+    <p class="module-kicker">Geliştiriliyor</p>
+    <h2>Web & SEO Audit</h2>
+    <p>
+      Teknik SEO, meta yapısı, sitemap, robots.txt, structured data ve temel
+      web kalite kontrolleri.
+    </p>
+    <a class="button-link secondary-button" href="{{ url_for('web.web_seo_audit') }}">Modülü görüntüle</a>
+  </article>
+</section>
+{% endblock %}
