@@ -33,11 +33,22 @@ def result():
             400,
         )
 
+    findings = [
+        {
+            "id": question["id"],
+            "text": question["text"],
+            "response": responses[question["id"]],
+        }
+        for question in data["questions"]
+        if responses[question["id"]] in {"hayir", "kismen"}
+    ]
+
     return render_template(
         "result.html",
         data=data,
         responses=responses,
         evaluation=evaluation,
+        findings=findings,
         cta_url=current_app.config["CTA_URL"],
         cta_label=current_app.config["CTA_LABEL"],
     )
