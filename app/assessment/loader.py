@@ -40,7 +40,7 @@ def _validate_assessment(data: dict[str, Any]) -> None:
     for category in categories:
         category_questions = category.get("questions")
         if not isinstance(category_questions, list):
-            raise ValueError("Each category must list its question IDs.")
+            raise TypeError("Each category must list its question IDs.")
         category_question_ids.extend(category_questions)
 
     if category_question_ids != question_ids:
@@ -53,7 +53,7 @@ def _validate_assessment(data: dict[str, Any]) -> None:
         if not isinstance(question.get("text"), str) or not question["text"].strip():
             raise ValueError(f"Question text is required for {question['id']}.")
         if not isinstance(question.get("allow_na"), bool):
-            raise ValueError(f"allow_na must be boolean for {question['id']}.")
+            raise TypeError(f"allow_na must be boolean for {question['id']}.")
 
     if set(category_question_ids) != question_id_set:
         raise ValueError("Categories must reference every assessment question exactly once.")
