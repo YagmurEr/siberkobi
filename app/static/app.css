@@ -182,3 +182,49 @@ button:disabled { opacity: .55; cursor: not-allowed; }
   border-radius: 12px;
   box-shadow: 0 12px 28px rgba(8, 24, 38, .18);
 }
+
+/* Web analysis */
+.scan-form {
+  max-width: 760px;
+  margin: 0 0 40px;
+}
+.scan-form > label {
+  display: block;
+  margin-bottom: 8px;
+}
+.scan-form input[type="text"] {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--text);
+  font: inherit;
+}
+.scan-form input[type="text"]:focus {
+  outline: 3px solid rgba(63, 107, 142, .16);
+  border-color: var(--brand);
+}
+.scan-section { margin: 30px 0; }
+.scan-table-wrap {
+  overflow-x: auto;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.scan-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.scan-table th,
+.scan-table td {
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+}
+.scan-table tr:last-child td { border-bottom: 0; }
+.scan-table th {
+  background: #f8fafc;
+  font-size: .86rem;
+  color: #475569;
+}

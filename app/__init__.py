@@ -42,7 +42,7 @@ def create_app() -> Flask:
             "frame-ancestors 'none'"
         )
 
-        if request.path == "/sonuc":
+        if request.path in {"/sonuc", "/openscan/sonuc"}:
             response.headers["Cache-Control"] = "no-store"
 
         app.logger.info(

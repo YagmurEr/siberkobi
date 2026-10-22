@@ -38,7 +38,9 @@ def test_module_entry_pages_render() -> None:
     seo = client.get("/web-seo-audit")
 
     assert openscan.status_code == 200
-    assert "Web Analiz" in openscan.get_data(as_text=True)
+    openscan_body = openscan.get_data(as_text=True)
+    assert "Web Analiz" in openscan_body
+    assert 'name="target"' in openscan_body
     assert seo.status_code == 200
     assert "SEO Analiz" in seo.get_data(as_text=True)
 
