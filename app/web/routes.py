@@ -2,6 +2,7 @@ from flask import Blueprint, current_app, render_template, request
 
 from app.assessment.loader import load_assessment
 from app.evaluation.engine import evaluate
+from app.webscan.scanner import ScanValidationError, run_web_analysis
 
 web_bp = Blueprint("web", __name__)
 
@@ -22,16 +23,34 @@ def assessment():
 
 @web_bp.get("/openscan")
 def openscan():
-    return render_template(
-        "module_placeholder.html",
-        module_name="Web Analiz",
-        eyebrow="Güvenlik Görünürlüğü",
-        description=(
-            "Yetkili hedeflerde temel güvenlik görünürlüğü, SSL/TLS, "
-            "security headers, DNS, servis ve zafiyet kontrolleri."
-        ),
-        status="Geliştirme aşamasında",
+    return render_template("openscan.html")
+
+
+@web_bp.post("/openscan/sonuc")
+def openscan_result():
+    target = request.form.get("target", "").strip()
+
+    if request.form.get(_AUTHORIZATION_FIELD) != _AUTHORIZATION_VALUE:
+        return (
+            render_template(
+                "openscan.html",
+                error="Devam etmek için bu hedefi değerlendirmeye yetkili olduğunuzu onaylayın.",
+                target=target,
+            ),
+            400,
+        )
+
+    try:
+        report = run_web_analysis(target)
+    except ScanValidationError as exc:
+        return render_template("openscan.html", error=str(exc), target=target), 400
+
+    current_app.logger.info(
+        "web_analysis_completed target=%s findings=%s",
+        report["target"],
+        report["summary"]["findings_total"],
     )
+    return render_template("openscan_result.html", report=report)
 
 
 @web_bp.get("/web-seo-audit")
