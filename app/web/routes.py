@@ -11,8 +11,41 @@ _AUTHORIZATION_VALUE = "yes"
 
 @web_bp.get("/")
 def index():
+    return render_template("index.html")
+
+
+@web_bp.get("/assessment")
+def assessment():
     data = load_assessment()
     return render_template("assessment.html", data=data)
+
+
+@web_bp.get("/openscan")
+def openscan():
+    return render_template(
+        "module_placeholder.html",
+        module_name="OpenScan",
+        eyebrow="Güvenlik Görünürlüğü",
+        description=(
+            "Yetkili hedeflerde temel güvenlik görünürlüğü, SSL/TLS, "
+            "security headers, DNS, servis ve zafiyet kontrolleri."
+        ),
+        status="Geliştirme aşamasında",
+    )
+
+
+@web_bp.get("/web-seo-audit")
+def web_seo_audit():
+    return render_template(
+        "module_placeholder.html",
+        module_name="Web & SEO Audit",
+        eyebrow="Teknik SEO ve Web Kontrolleri",
+        description=(
+            "Title, meta, başlık yapısı, canonical, robots.txt, sitemap, "
+            "structured data ve temel web kalite kontrolleri."
+        ),
+        status="Geliştirme aşamasında",
+    )
 
 
 @web_bp.post("/sonuc")
