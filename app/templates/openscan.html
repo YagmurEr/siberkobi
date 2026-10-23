@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block title %}SiberKOBİ · Web Analiz{% endblock %}
 {% block content %}
-<section class="hero">
+<div class="tool-page">
+<section class="hero tool-hero">
   <p class="eyebrow">Güvenlik Görünürlüğü</p>
   <h1>Web Analiz</h1>
   <p class="lead">
@@ -14,7 +15,7 @@
 <p class="alert">{{ error }}</p>
 {% endif %}
 
-<form method="post" action="{{ url_for('web.openscan_result') }}" class="scan-form">
+<form method="post" action="{{ url_for('web.openscan_result') }}" class="scan-form" data-scan-form>
   <label for="target"><strong>Alan adı</strong></label>
   <input id="target" name="target" type="text" inputmode="url"
          placeholder="example.com" value="{{ target or '' }}" required>
@@ -37,11 +38,26 @@
   </div>
 </form>
 
+<section class="scan-progress-card" data-scan-progress hidden aria-live="polite">
+  <p class="module-kicker">Analiz çalışıyor</p>
+  <h2>Hedef üzerinde temel kontroller yapılıyor</h2>
+  <ol class="scan-steps">
+    <li>Alan adı ve public IP doğrulaması</li>
+    <li>Web ve veritabanı port görünürlüğü</li>
+    <li>HTTP / HTTPS yanıt kontrolü</li>
+    <li>TLS sertifika ve protokol kontrolü</li>
+    <li>Security header ve risk bulgularının hazırlanması</li>
+  </ol>
+  <p class="muted">Tarama düşük yoğunlukludur; exploit veya saldırı işlemi yapılmaz.</p>
+</section>
+
 <section class="module-status-card">
   <p class="module-kicker">Kontrol kapsamı</p>
   <p>
-    DNS çözümleme, 80/443/8080/8443 web portları, HTTP/HTTPS yanıtları,
-    TLS sertifikası ve güvenlik başlıkları. Private ve local hedefler reddedilir.
+    DNS çözümleme; 80/443/8080/8443 web portları; 1433, 1521, 3306, 5432,
+    6379 ve 27017 veritabanı portları; HTTP/HTTPS yanıtları, TLS sertifikası
+    ve güvenlik başlıkları. Private ve local hedefler reddedilir.
   </p>
 </section>
+</div>
 {% endblock %}
