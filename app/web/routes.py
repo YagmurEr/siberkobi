@@ -1,5 +1,6 @@
 from flask import Blueprint, current_app, render_template, request
 
+from app.assessment.guidance import build_grouped_actions
 from app.assessment.loader import load_assessment
 from app.evaluation.engine import evaluate
 from app.seoaudit.audit import run_seo_audit
@@ -133,6 +134,7 @@ def result():
         for question in data["questions"]
         if responses[question["id"]] in {"hayir", "kismen"}
     ]
+    action_groups = build_grouped_actions(data, responses)
 
     return render_template(
         "result.html",
@@ -140,6 +142,7 @@ def result():
         responses=responses,
         evaluation=evaluation,
         findings=findings,
+        action_groups=action_groups,
         cta_url=current_app.config["CTA_URL"],
         cta_label=current_app.config["CTA_LABEL"],
     )
