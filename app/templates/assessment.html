@@ -1,8 +1,11 @@
 {% extends "base.html" %}
-{% block title %}SiberKOBİ · Değerlendirme{% endblock %}
+{% block title %}SiberKOBİ · Değerlendirme</div>
+{% endblock %}
+{% block body_class %}page-assessment{% endblock %}
 {% block content %}
-<section class="hero">
-  <p class="eyebrow">25 Soru · 5 Güvenlik Alanı · Öncelikli İyileştirmeler</p>
+<div class="assessment-shell">
+<section class="assessment-hero">
+  <p class="ui-kicker ui-kicker--dark">25 SORU · 5 GÜVENLİK ALANI · ÖNCELİKLİ İYİLEŞTİRMELER</p>
   <h1>KOBİ'niz Siber Tehditlere Ne Kadar Hazır?</h1>
   <p class="lead">Siber güvenlikte önemli olan yalnızca hangi ürünlere sahip olduğunuz değil, güvenlik kontrollerinizin gerçekten çalışıp çalışmadığıdır.</p>
 </section>
@@ -11,10 +14,10 @@
 <div class="alert" role="alert">{{ error }}</div>
 {% endif %}
 
-<form method="post" action="{{ url_for('web.result') }}" data-assessment-form>
+<form method="post" action="{{ url_for('web.result') }}" data-assessment-form class="assessment-form">
   {% for category in data.categories %}
-  <section class="category">
-    <h2>{{ category.name }}</h2>
+  <section class="category assessment-category">
+    <div class="assessment-category-heading"><span>{{ loop.index|string|replace("1","01")|replace("2","02")|replace("3","03")|replace("4","04")|replace("5","05") }}</span><h2>{{ category.name }}</h2></div>
     {% for question_id in category.questions %}
       {% set q = (data.questions | selectattr('id', 'equalto', question_id) | first) %}
       <fieldset class="question">
