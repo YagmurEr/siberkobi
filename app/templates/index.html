@@ -1,84 +1,122 @@
 {% extends "base.html" %}
 {% block title %}SiberKOBİ · Ana Sayfa{% endblock %}
+{% block body_class %}page-home{% endblock %}
 {% block content %}
-<section class="reference-hero">
-  <div class="container reference-hero-inner">
-    <p class="reference-eyebrow">ÜCRETSİZ · ANONİM · KAYIT GEREKMEZ</p>
-    <h1>KOBİ’niz<br><span>Dijital Dünyada</span> Ne Kadar Güvende?</h1>
-    <p class="reference-lead">
-      SiberKOBİ, web sitenizi, dijital varlıklarınızı ve güvenlik hazırlığınızı
-      hızlı, kolay ve ücretsiz araçlarla değerlendirmenize yardımcı olur.
-    </p>
+<section class="home-hero">
+  <div class="container home-hero-grid">
+    <div class="home-hero-copy">
+      <p class="ui-kicker">ÜCRETSİZ · ANONİM · KAYIT GEREKMEZ</p>
+      <h1>KOBİ’niz<br><span>Dijital Dünyada</span><br>Ne Kadar Güvende?</h1>
+      <p class="home-hero-lead">
+        SiberKOBİ, web sitenizi, dijital varlıklarınızı ve güvenlik hazırlığınızı
+        hızlı, kolay ve ücretsiz araçlarla değerlendirmenize yardımcı olur.
+      </p>
+      <div class="home-trust-row">
+        <span>Ücretsiz</span>
+        <span>Kayıt yok</span>
+        <span>Hızlı sonuç</span>
+      </div>
+    </div>
+
+    <div class="home-hero-panel" aria-label="SiberKOBİ araç özeti">
+      <div class="hero-panel-top">
+        <span class="hero-panel-badge">3 MODÜL</span>
+        <span class="hero-panel-dot"></span>
+      </div>
+      <div class="hero-panel-item">
+        <span class="hero-panel-index">01</span>
+        <div><strong>Web Analiz</strong><small>Dış görünürlük ve temel güvenlik kontrolleri</small></div>
+      </div>
+      <div class="hero-panel-item">
+        <span class="hero-panel-index">02</span>
+        <div><strong>SEO Analiz</strong><small>Teknik SEO ve taranabilirlik görünürlüğü</small></div>
+      </div>
+      <div class="hero-panel-item">
+        <span class="hero-panel-index">03</span>
+        <div><strong>Siber Güvenlik Anketi</strong><small>25 soruda hazırlık seviyenizi ölçün</small></div>
+      </div>
+      <p class="hero-panel-note">Riskini bugün gör, yarını koru.</p>
+    </div>
   </div>
 </section>
 
-<section class="reference-modules">
+<section class="home-tools">
   <div class="container">
-    <div class="reference-card-grid">
-      <article class="reference-card reference-card--web">
-        <div class="reference-card-number">01</div>
-        <div class="reference-card-accent"></div>
-        <div class="reference-card-icon" aria-hidden="true">◎</div>
-        <h2>Web Analiz</h2>
-        <h3>Dijital varlıklarınızı keşfedin.</h3>
-        <p>
-          Web siteniz ve alan adınız üzerindeki temel güvenlik kontrollerini
-          gerçekleştirir, olası riskleri ortaya çıkarır.
-        </p>
+    <div class="section-heading-row">
+      <div>
+        <p class="ui-kicker ui-kicker--dark">SİBERKOBİ ARAÇLARI</p>
+        <h2>İhtiyacınıza göre başlayın</h2>
+      </div>
+      <p>Üç modül de birbirinden bağımsız çalışır ve sonuçları ayrı raporlar.</p>
+    </div>
+
+    <div class="home-tool-grid">
+      <article class="home-tool-card home-tool-card--web">
+        <div class="tool-card-top">
+          <span class="tool-index">01</span>
+          <span class="tool-symbol">◎</span>
+        </div>
+        <div>
+          <h2>Web Analiz</h2>
+          <h3>Dijital varlıklarınızı keşfedin.</h3>
+          <p>
+            Web siteniz ve alan adınız üzerindeki temel güvenlik kontrollerini
+            gerçekleştirir, olası riskleri ortaya çıkarır.
+          </p>
+        </div>
         <ul>
           <li>Açık port ve servis tespiti</li>
           <li>SSL/TLS ve güvenlik başlıkları</li>
           <li>Temel zafiyet kontrolleri</li>
           <li>Anlaşılır ve pratik öneriler</li>
         </ul>
-        <a class="reference-button reference-button--web" href="{{ url_for('web.openscan') }}">
-          Web Analizi Başlat <span aria-hidden="true">→</span>
-        </a>
+        <a class="tool-cta" href="{{ url_for('web.openscan') }}">Web Analizi Başlat <span>→</span></a>
       </article>
 
-      <article class="reference-card reference-card--seo">
-        <div class="reference-card-number">02</div>
-        <div class="reference-card-accent"></div>
-        <div class="reference-card-icon" aria-hidden="true">⌕</div>
-        <h2>SEO Analiz</h2>
-        <h3>Web sitenizin görünürlüğünü artırın.</h3>
-        <p>
-          Web sitenizin teknik SEO durumunu analiz eder, arama motorlarında
-          daha iyi görünür olmanız için öneriler sunar.
-        </p>
+      <article class="home-tool-card home-tool-card--seo">
+        <div class="tool-card-top">
+          <span class="tool-index">02</span>
+          <span class="tool-symbol">⌕</span>
+        </div>
+        <div>
+          <h2>SEO Analiz</h2>
+          <h3>Web sitenizin görünürlüğünü artırın.</h3>
+          <p>
+            Web sitenizin teknik SEO durumunu analiz eder, arama motorlarında
+            daha iyi görünür olmanız için öneriler sunar.
+          </p>
+        </div>
         <ul>
           <li>Başlık ve meta etiket kontrolleri</li>
           <li>Robots.txt ve sitemap analizi</li>
           <li>Sayfa yapısı ve performans kontrolleri</li>
           <li>Anlaşılır ve uygulanabilir öneriler</li>
         </ul>
-        <a class="reference-button reference-button--seo" href="{{ url_for('web.web_seo_audit') }}">
-          SEO Analizi Başlat <span aria-hidden="true">→</span>
-        </a>
+        <a class="tool-cta" href="{{ url_for('web.web_seo_audit') }}">SEO Analizi Başlat <span>→</span></a>
       </article>
 
-      <article class="reference-card reference-card--survey">
-        <div class="reference-card-number">03</div>
-        <div class="reference-card-accent"></div>
-        <div class="reference-card-icon" aria-hidden="true">▤</div>
-        <h2>Siber Güvenlik Anketi</h2>
-        <h3>Hazırlığınızı ölçün.</h3>
-        <p>
-          25 soruluk öz değerlendirme ile siber güvenlik hazırlığınızı ölçün,
-          güçlü ve gelişime açık alanlarınızı görün.
-        </p>
+      <article class="home-tool-card home-tool-card--survey">
+        <div class="tool-card-top">
+          <span class="tool-index">03</span>
+          <span class="tool-symbol">25</span>
+        </div>
+        <div>
+          <h2>Siber Güvenlik Anketi</h2>
+          <h3>Hazırlığınızı ölçün.</h3>
+          <p>
+            25 soruluk öz değerlendirme ile siber güvenlik hazırlığınızı ölçün,
+            güçlü ve gelişime açık alanlarınızı görün.
+          </p>
+        </div>
         <ul>
           <li>5 ana başlıkta 25 soru</li>
           <li>Anında sonuç ve değerlendirme</li>
           <li>KOBİ'lere özel öneriler</li>
           <li>Ücretsiz, anonim ve kayıt gerektirmez</li>
         </ul>
-        <a class="reference-button reference-button--survey" href="{{ url_for('web.assessment') }}">
-          Ankete Başla <span aria-hidden="true">→</span>
-        </a>
+        <a class="tool-cta" href="{{ url_for('web.assessment') }}">Ankete Başla <span>→</span></a>
       </article>
     </div>
   </div>
 </section>
-
 {% endblock %}

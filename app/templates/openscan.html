@@ -1,63 +1,79 @@
 {% extends "base.html" %}
 {% block title %}SiberKOBİ · Web Analiz{% endblock %}
+{% block body_class %}page-tool page-web-analysis{% endblock %}
 {% block content %}
-<div class="tool-page">
-<section class="hero tool-hero">
-  <p class="eyebrow">Güvenlik Görünürlüğü</p>
-  <h1>Web Analiz</h1>
-  <p class="lead">
-    Yetkili olduğunuz internet üzerindeki bir alan adının temel web güvenliği
-    görünürlüğünü düşük yoğunluklu kontrollerle değerlendirin.
-  </p>
-</section>
+<section class="tool-shell">
+  <div class="tool-shell-main">
+    <header class="tool-page-header">
+      <p class="ui-kicker ui-kicker--dark">GÜVENLİK GÖRÜNÜRLÜĞÜ</p>
+      <h1>Web Analiz</h1>
+      <p>
+        Yetkili olduğunuz internet üzerindeki bir alan adının temel web güvenliği
+        görünürlüğünü düşük yoğunluklu kontrollerle değerlendirin.
+      </p>
+    </header>
 
-{% if error %}
-<p class="alert">{{ error }}</p>
-{% endif %}
+    {% if error %}<p class="alert">{{ error }}</p>{% endif %}
 
-<form method="post" action="{{ url_for('web.openscan_result') }}" class="scan-form" data-scan-form>
-  <label for="target"><strong>Alan adı</strong></label>
-  <input id="target" name="target" type="text" inputmode="url"
-         placeholder="example.com" value="{{ target or '' }}" required>
+    <form method="post" action="{{ url_for('web.openscan_result') }}" class="modern-form" data-scan-form>
+      <div class="form-block">
+        <label for="target">Alan adı</label>
+        <div class="input-shell">
+          <span>https://</span>
+          <input id="target" name="target" type="text" inputmode="url"
+                 placeholder="example.com" value="{{ target or '' }}" required>
+        </div>
+        <small>Yalnızca sahibi olduğunuz veya değerlendirmeye yetkili olduğunuz hedefleri kullanın.</small>
+      </div>
 
-  <div class="authorization">
-    <h2>Kullanım Onayı</h2>
-    <p>
-      Bu aracı yalnızca sahibi olduğunuz veya güvenlik değerlendirmesi yapmaya
-      açıkça yetkili olduğunuz internet hedefleri için kullanın.
-    </p>
-    <label class="authorization-check">
-      <input type="checkbox" name="authorization_confirmed" value="yes" required>
-      <span>Bu hedefi değerlendirmeye yetkili olduğumu onaylıyorum.</span>
-    </label>
+      <div class="consent-card">
+        <div class="consent-icon">✓</div>
+        <div>
+          <strong>Kullanım Onayı</strong>
+          <p>Bu araç düşük yoğunluklu görünürlük kontrolü yapar; exploit veya saldırı işlemi gerçekleştirmez.</p>
+          <label class="authorization-check">
+            <input type="checkbox" name="authorization_confirmed" value="yes" required>
+            <span>Bu hedefi değerlendirmeye yetkili olduğumu onaylıyorum.</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="actions modern-actions">
+        <button type="submit">Web Analizini Başlat <span>→</span></button>
+        <a class="secondary-link" href="{{ url_for('web.index') }}">Ana sayfaya dön</a>
+      </div>
+    </form>
+
+    <section class="scan-progress-card" data-scan-progress hidden aria-live="polite">
+      <p class="ui-kicker ui-kicker--dark">ANALİZ ÇALIŞIYOR</p>
+      <h2>Hedef üzerinde temel kontroller yapılıyor</h2>
+      <ol class="scan-steps">
+        <li>Alan adı ve public IP doğrulaması</li>
+        <li>Web ve veritabanı port görünürlüğü</li>
+        <li>HTTP / HTTPS yanıt kontrolü</li>
+        <li>TLS sertifika ve protokol kontrolü</li>
+        <li>Security header ve risk bulgularının hazırlanması</li>
+      </ol>
+    </section>
   </div>
 
-  <div class="actions">
-    <button type="submit">Web Analizini Başlat</button>
-    <a class="secondary-link" href="{{ url_for('web.index') }}">Ana sayfaya dön</a>
-  </div>
-</form>
-
-<section class="scan-progress-card" data-scan-progress hidden aria-live="polite">
-  <p class="module-kicker">Analiz çalışıyor</p>
-  <h2>Hedef üzerinde temel kontroller yapılıyor</h2>
-  <ol class="scan-steps">
-    <li>Alan adı ve public IP doğrulaması</li>
-    <li>Web ve veritabanı port görünürlüğü</li>
-    <li>HTTP / HTTPS yanıt kontrolü</li>
-    <li>TLS sertifika ve protokol kontrolü</li>
-    <li>Security header ve risk bulgularının hazırlanması</li>
-  </ol>
-  <p class="muted">Tarama düşük yoğunlukludur; exploit veya saldırı işlemi yapılmaz.</p>
+  <aside class="tool-shell-aside">
+    <div class="aside-card">
+      <span class="aside-label">KONTROL KAPSAMI</span>
+      <h2>Neleri kontrol ediyoruz?</h2>
+      <ul class="aside-check-list">
+        <li>DNS ve public IP</li>
+        <li>80 / 443 / 8080 / 8443</li>
+        <li>DB port görünürlüğü</li>
+        <li>HTTP / HTTPS yanıtı</li>
+        <li>TLS sertifikası</li>
+        <li>Security headers</li>
+      </ul>
+    </div>
+    <div class="aside-note">
+      <strong>Güvenli sınır</strong>
+      <p>Private, localhost ve rezerve hedefler otomatik olarak reddedilir.</p>
+    </div>
+  </aside>
 </section>
-
-<section class="module-status-card">
-  <p class="module-kicker">Kontrol kapsamı</p>
-  <p>
-    DNS çözümleme; 80/443/8080/8443 web portları; 1433, 1521, 3306, 5432,
-    6379 ve 27017 veritabanı portları; HTTP/HTTPS yanıtları, TLS sertifikası
-    ve güvenlik başlıkları. Private ve local hedefler reddedilir.
-  </p>
-</section>
-</div>
 {% endblock %}
