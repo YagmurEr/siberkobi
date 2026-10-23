@@ -25,7 +25,16 @@
       {% for finding in report.findings %}
       <article class="report-action">
         <span class="action-number">{{ loop.index }}</span>
-        <div><strong>{{ finding.title }}</strong><p>{{ finding.detail }}</p></div>
+        <div class="seo-guidance">
+          <strong>{{ finding.title }}</strong>
+          <p>{{ finding.detail }}</p>
+          {% if finding.why %}
+          <div class="guidance-row"><span>Neden önemli?</span><p>{{ finding.why }}</p></div>
+          {% endif %}
+          {% if finding.fix %}
+          <div class="guidance-row"><span>Nasıl düzeltilir?</span><p>{{ finding.fix }}</p></div>
+          {% endif %}
+        </div>
         <span class="severity severity--{{ finding.severity }}">{{ finding.severity | upper }}</span>
       </article>
       {% endfor %}
@@ -56,12 +65,23 @@
     <div class="report-three-col">
       <article class="report-panel"><h3>robots.txt</h3><strong>{{ "Erişilebilir" if report.robots.ok else "Erişilemiyor" }}</strong>{% if report.robots.status %}<p>HTTP {{ report.robots.status }}</p>{% endif %}</article>
       <article class="report-panel"><h3>sitemap.xml</h3><strong>{{ "Erişilebilir" if report.sitemap.ok else "Erişilemiyor" }}</strong>{% if report.sitemap.status %}<p>HTTP {{ report.sitemap.status }}</p>{% endif %}</article>
-      <article class="report-panel"><h3>Meta robots</h3><strong>{{ report.robots_meta or "Tanımlı değil" }}</strong></article>
+      <article class="report-panel">
+        <h3>Meta robots</h3>
+        <strong>{{ report.robots_meta_status }}</strong>
+        {% if report.robots_meta %}<p>{{ report.robots_meta }}</p>{% else %}<p class="muted">Özel noindex/nofollow ihtiyacı yoksa ayrıca tanımlamak zorunlu değildir.</p>{% endif %}
+      </article>
     </div>
   </section>
 
   <section class="report-section">
-    <div class="report-section-title"><span>04</span><h2>Sosyal ve yapılandırılmış veri</h2></div>
+    <div class="report-section-title"><span>04</span><h2>Ölçüm, sosyal ve yapılandırılmış veri</h2></div>
+    <div class="report-panel" style="margin-bottom:14px">
+      <h3>Google Analytics / Tag Manager</h3>
+      <strong>{{ report.analytics.status }}</strong>
+      {% if not report.analytics.detected %}
+      <p class="muted">Bu doğrudan SEO hatası değildir. Ölçüm gerekiyorsa GA4 veya Google Tag Manager kurulumu değerlendirilmelidir.</p>
+      {% endif %}
+    </div>
     <div class="scan-table-wrap">
       <table class="scan-table report-table">
         <tbody>

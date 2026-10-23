@@ -74,3 +74,33 @@ def test_run_seo_audit_builds_findings(monkeypatch) -> None:
     assert "Meta description yok" in titles
     assert "Canonical etiketi yok" in titles
     assert report["images_missing_alt"] == 1
+
+
+def test_findings_include_deterministic_guidance(monkeypatch) -> None:
+    html = b"<html><head><title>X</title></head><body><h1>A</h1><h1>B</h1></body></html>"
+
+    def fake_fetch(url, **kwargs):
+        return {
+            "url": url,
+            "final_url": "https://example.com/",
+            "status": 200,
+            "reason": "OK",
+            "headers": {"content-type": "text/html; charset=utf-8"},
+            "body": html if kwargs.get("method") != "HEAD" else b"",
+            "elapsed_ms": 120,
+        }
+
+    monkeypatch.setattr("app.seoaudit.audit.normalize_url", lambda raw: "https://example.com/")
+    monkeypatch.setattr("app.seoaudit.audit.fetch_url", fake_fetch)
+    monkeypatch.setattr(
+        "app.seoaudit.audit._fetch_optional",
+        lambda base, path: {"ok": True, "status": 200, "url": base + path, "text": ""},
+    )
+
+    report = run_seo_audit("example.com")
+    finding = next(item for item in report["findings"] if item["title"] == "Birden fazla H1 var")
+
+    assert finding["why"]
+    assert finding["fix"]
+    assert report["robots_meta_status"].startswith("Normal")
+    assert report["analytics"]["detected"] is False
