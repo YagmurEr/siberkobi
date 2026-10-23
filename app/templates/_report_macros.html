@@ -1,0 +1,25 @@
+{% macro page_header(title, target, page_no) -%}
+<header class="report-page-header">
+  <div class="report-page-brand">
+    <img src="{{ url_for('static', filename='siberkobi-logo.svg') }}" alt="SiberKOBİ">
+    <div>
+      <strong>SiberKOBİ</strong>
+      <span>{{ title }}</span>
+    </div>
+  </div>
+  <div class="report-page-meta">
+    <span>{{ target }}</span>
+    <strong>{{ "%02d"|format(page_no) }}</strong>
+  </div>
+</header>
+{%- endmacro %}
+
+{% macro page_footer(page_no) -%}
+<footer class="report-page-footer">
+  <div>
+    <strong>eclipta</strong>
+    <span>Sürdürülebilir BT Çözümleri</span>
+  </div>
+  <span>Riskini bugün gör, yarını koru. · Sayfa {{ page_no }}</span>
+</footer>
+{%- endmacro %}
