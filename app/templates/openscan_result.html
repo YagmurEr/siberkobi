@@ -1,123 +1,113 @@
 {% extends "base.html" %}
 {% block title %}SiberKOBİ · Web Analiz Sonucu{% endblock %}
 {% block content %}
-<section class="hero">
-  <p class="eyebrow">Web Analiz Sonucu</p>
-  <h1>{{ report.target }}</h1>
-  <p class="lead">Düşük yoğunluklu web güvenliği görünürlük kontrolü tamamlandı.</p>
-</section>
+<div class="report-shell">
+  <header class="report-header">
+    <img class="report-logo" src="{{ url_for('static', filename='siberkobi-logo.svg') }}" alt="SiberKOBİ">
+    <div>
+      <p class="report-kicker">WEB ANALİZ RAPORU</p>
+      <h1>{{ report.target }}</h1>
+      <p>Dışarıdan görünen temel web güvenliği görünürlüğü</p>
+    </div>
+  </header>
 
-<section class="result-grid">
-  <article class="result-card">
-    <h3>Açık web portu</h3>
-    <p class="result-number">{{ report.summary.open_web_ports }}</p>
-  </article>
-  <article class="result-card">
-    <h3>Toplam bulgu</h3>
-    <p class="result-number">{{ report.summary.findings_total }}</p>
-  </article>
-  <article class="result-card">
-    <h3>Yüksek/Kritik</h3>
-    <p class="result-number">{{ report.summary.high + report.summary.critical }}</p>
-  </article>
-</section>
+  <section class="report-summary-grid">
+    <article class="report-metric">
+      <span>Açık port</span>
+      <strong>{{ report.summary.open_web_ports }}</strong>
+    </article>
+    <article class="report-metric">
+      <span>Toplam bulgu</span>
+      <strong>{{ report.summary.findings_total }}</strong>
+    </article>
+    <article class="report-metric report-metric--risk">
+      <span>Yüksek / Kritik</span>
+      <strong>{{ report.summary.high + report.summary.critical }}</strong>
+    </article>
+  </section>
 
-<section class="scan-section">
-  <h2>DNS</h2>
-  <div class="module-status-card">
-    <strong>Çözümlenen IP adresleri</strong>
-    <p>{{ report.resolved_ips | join(", ") }}</p>
-  </div>
-</section>
+  <section class="report-section">
+    <div class="report-section-title"><span>01</span><h2>DNS ve hedef</h2></div>
+    <div class="report-panel">
+      <p><strong>Alan adı:</strong> {{ report.target }}</p>
+      <p><strong>Çözümlenen IP:</strong> {{ report.resolved_ips | join(", ") }}</p>
+    </div>
+  </section>
 
-<section class="scan-section">
-  <h2>Web servisleri</h2>
-  <div class="scan-table-wrap">
-    <table class="scan-table">
-      <thead><tr><th>Port</th><th>Servis</th><th>Durum</th></tr></thead>
-      <tbody>
-      {% for item in report.ports %}
-        <tr>
-          <td>{{ item.port }}</td>
-          <td>{{ item.service }}</td>
-          <td>{{ "Açık" if item.open else "Kapalı / ulaşılamadı" }}</td>
-        </tr>
+  <section class="report-section">
+    <div class="report-section-title"><span>02</span><h2>Port ve servis görünürlüğü</h2></div>
+    <div class="scan-table-wrap">
+      <table class="scan-table report-table">
+        <thead><tr><th>Port</th><th>Beklenen servis</th><th>Durum</th></tr></thead>
+        <tbody>
+        {% for item in report.ports %}
+          <tr class="{{ 'row-open' if item.open else '' }}">
+            <td>{{ item.port }}</td>
+            <td>{{ item.service }}</td>
+            <td><span class="report-status {{ 'is-open' if item.open else 'is-closed' }}">{{ "Açık" if item.open else "Kapalı / ulaşılamadı" }}</span></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="report-note">Port adı, çalışan ürünün kesin doğrulaması değildir; yalnızca yaygın servis eşlemesidir.</p>
+  </section>
+
+  <section class="report-section">
+    <div class="report-section-title"><span>03</span><h2>HTTP / HTTPS ve TLS</h2></div>
+    <div class="report-two-col">
+      <article class="report-panel">
+        <h3>HTTP / HTTPS</h3>
+        <p><strong>HTTP:</strong> {% if report.http.ok %}{{ report.http.status }} {{ report.http.reason }}{% else %}Yanıt alınamadı{% endif %}</p>
+        <p><strong>HTTPS:</strong> {% if report.https.ok %}{{ report.https.status }} {{ report.https.reason }}{% else %}Yanıt alınamadı{% endif %}</p>
+      </article>
+      <article class="report-panel">
+        <h3>TLS</h3>
+        {% if report.tls.ok %}
+          <p><strong>Protokol:</strong> {{ report.tls.version or "Bilinmiyor" }}</p>
+          <p><strong>Cipher:</strong> {{ report.tls.cipher or "Bilinmiyor" }}</p>
+          <p><strong>Issuer:</strong> {{ report.tls.issuer_cn or "Bilinmiyor" }}</p>
+          <p><strong>Kalan gün:</strong> {{ report.tls.days_remaining if report.tls.days_remaining is not none else "Bilinmiyor" }}</p>
+        {% else %}
+          <p>TLS oturumu kurulamadı.</p>
+        {% endif %}
+      </article>
+    </div>
+  </section>
+
+  <section class="report-section">
+    <div class="report-section-title"><span>04</span><h2>Öncelikli bulgular</h2></div>
+    {% if report.findings %}
+    <div class="report-findings">
+      {% for finding in report.findings %}
+      <article class="report-finding">
+        <span class="severity severity--{{ finding.severity }}">{{ finding.severity | upper }}</span>
+        <div><strong>{{ finding.title }}</strong><p>{{ finding.detail }}</p></div>
+      </article>
       {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</section>
+    </div>
+    {% else %}
+    <div class="report-panel"><p>Bu temel kontrolde raporlanacak bulgu oluşmadı.</p></div>
+    {% endif %}
+  </section>
 
-<section class="scan-section">
-  <h2>HTTP / HTTPS</h2>
-  <div class="result-grid">
-    <article class="result-card">
-      <h3>HTTP</h3>
-      {% if report.http.ok %}
-      <p>{{ report.http.status }} {{ report.http.reason }}</p>
-      {% else %}
-      <p>Yanıt alınamadı.</p>
-      {% endif %}
-    </article>
-    <article class="result-card">
-      <h3>HTTPS</h3>
-      {% if report.https.ok %}
-      <p>{{ report.https.status }} {{ report.https.reason }}</p>
-      {% else %}
-      <p>Yanıt alınamadı.</p>
-      {% endif %}
-    </article>
-  </div>
-</section>
+  <section class="report-section">
+    <div class="report-section-title"><span>05</span><h2>CVE / CISA KEV durumu</h2></div>
+    <div class="report-panel">
+      <p><strong>CVE:</strong> {{ report.cve.reason }}</p>
+      <p><strong>KEV:</strong> {{ report.kev.reason }}</p>
+      <p class="report-note">Servis sürümü doğrulanmadan CVE veya KEV eşleşmesi raporlanmaz.</p>
+    </div>
+  </section>
 
-<section class="scan-section">
-  <h2>TLS</h2>
-  <div class="module-status-card">
-  {% if report.tls.ok %}
-    <p><strong>Protokol:</strong> {{ report.tls.version or "Bilinmiyor" }}</p>
-    <p><strong>Cipher:</strong> {{ report.tls.cipher or "Bilinmiyor" }}</p>
-    <p><strong>Subject CN:</strong> {{ report.tls.subject_cn or "Bilinmiyor" }}</p>
-    <p><strong>Issuer CN:</strong> {{ report.tls.issuer_cn or "Bilinmiyor" }}</p>
-    <p><strong>Kalan gün:</strong> {{ report.tls.days_remaining if report.tls.days_remaining is not none else "Bilinmiyor" }}</p>
-  {% else %}
-    <p>TLS oturumu kurulamadı.</p>
-  {% endif %}
-  </div>
-</section>
+  <footer class="report-footer">
+    <div><span class="eclipta-wordmark">eclipta</span><span class="eclipta-slogan">Sürdürülebilir BT Çözümleri</span></div>
+    <span>SiberKOBİ · Riskini bugün gör, yarını koru.</span>
+  </footer>
 
-<section class="scan-section">
-  <h2>Bulgular</h2>
-  {% if report.findings %}
-  <div class="findings">
-    {% for finding in report.findings %}
-    <article class="finding">
-      <div>
-        <strong>{{ finding.title }}</strong>
-        <p>{{ finding.detail }}</p>
-      </div>
-      <span class="status">{{ finding.severity | upper }}</span>
-    </article>
-    {% endfor %}
+  <div class="actions no-print">
+    <a class="button-link" href="{{ url_for('web.openscan') }}">Yeni Analiz</a>
+    <button type="button" data-action="print">Yazdır / PDF</button>
   </div>
-  {% else %}
-  <p class="module-status-card">Bu temel kontrolde raporlanacak bulgu oluşmadı.</p>
-  {% endif %}
-</section>
-
-<section class="scan-section">
-  <h2>CVE / CISA KEV</h2>
-  <div class="module-status-card">
-    <p><strong>CVE:</strong> {{ report.cve.reason }}</p>
-    <p><strong>KEV:</strong> {{ report.kev.reason }}</p>
-    <p class="muted">
-      Not: Servis sürümü yalnız port numarasından veya Server başlığından kesinleştirilmez.
-      Yanlış pozitif üretmemek için doğrulanmamış CVE gösterilmez.
-    </p>
-  </div>
-</section>
-
-<div class="actions no-print">
-  <a class="button-link" href="{{ url_for('web.openscan') }}">Yeni Analiz</a>
-  <button type="button" data-action="print">Yazdır / PDF</button>
 </div>
 {% endblock %}

@@ -1,54 +1,80 @@
 {% extends "base.html" %}
 {% block title %}SiberKOBİ · Sonuç{% endblock %}
 {% block content %}
-<section class="hero">
-  <p class="eyebrow">Değerlendirme sonucu</p>
-  <h1>{{ evaluation.band }}</h1>
-  <p class="lead">Genel sonuç: %{{ '%.2f'|format(evaluation.percentage) }} · {{ evaluation.earned_points }}/{{ evaluation.maximum_points }} puan</p>
+<div class="report-shell">
+  <header class="report-header">
+    <img class="report-logo" src="{{ url_for('static', filename='siberkobi-logo.svg') }}" alt="SiberKOBİ">
+    <div>
+      <p class="report-kicker">SİBER GÜVENLİK ÖZ DEĞERLENDİRME RAPORU</p>
+      <h1>{{ evaluation.band }}</h1>
+      <p>25 soruluk teknik öz değerlendirme sonucu</p>
+    </div>
+  </header>
+
+  <section class="report-summary-grid">
+    <article class="report-metric report-metric--score">
+      <span>Genel skor</span>
+      <strong>%{{ '%.2f'|format(evaluation.percentage) }}</strong>
+    </article>
+    <article class="report-metric">
+      <span>Kazanılan puan</span>
+      <strong>{{ evaluation.earned_points }}</strong>
+    </article>
+    <article class="report-metric">
+      <span>Maksimum puan</span>
+      <strong>{{ evaluation.maximum_points }}</strong>
+    </article>
+  </section>
+
   {% if evaluation.not_applicable %}
-  <p class="muted">{{ evaluation.not_applicable }} soru uygulanamaz olarak değerlendirme dışında bırakıldı.</p>
+  <p class="report-note">{{ evaluation.not_applicable }} soru uygulanamaz olarak değerlendirme dışında bırakıldı.</p>
   {% endif %}
-</section>
 
-<section class="category">
-  <h2>Güvenlik alanları</h2>
-  <div class="result-grid">
-    {% for category in data.categories %}
-      {% set score = evaluation.by_category[category.id] %}
-      <article class="result-card">
-        <h3>{{ category.name }}</h3>
-        <p class="result-number">%{{ '%.2f'|format(score.percentage) }}</p>
-        <p class="muted">{{ score.earned }}/{{ score.maximum }} puan</p>
-      </article>
-    {% endfor %}
+  <section class="report-section">
+    <div class="report-section-title"><span>01</span><h2>Güvenlik alanları</h2></div>
+    <div class="report-domain-grid">
+      {% for category in data.categories %}
+        {% set score = evaluation.by_category[category.id] %}
+        <article class="report-domain">
+          <h3>{{ category.name }}</h3>
+          <strong>%{{ '%.2f'|format(score.percentage) }}</strong>
+          <p>{{ score.earned }}/{{ score.maximum }} puan</p>
+        </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="report-section">
+    <div class="report-section-title"><span>02</span><h2>Öncelikli iyileştirmeler</h2></div>
+    <div class="report-findings">
+      {% for finding in findings %}
+        <article class="report-finding">
+          <span class="severity {{ 'severity--high' if finding.response == 'hayir' else 'severity--medium' }}">{{ 'Hayır' if finding.response == 'hayir' else 'Kısmen' }}</span>
+          <div><strong><span class="qid">{{ finding.id }}</span> {{ finding.text }}</strong></div>
+        </article>
+      {% else %}
+        <div class="report-panel"><p>İyileştirme gerektiren yanıt bulunmadı.</p></div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="report-cta">
+    <div>
+      <p class="report-kicker">SONRAKİ ADIM</p>
+      <h2>Daha detaylı teknik değerlendirme gerekiyor mu?</h2>
+      <p>Bu araç hızlı bir öz değerlendirmedir. Kapsamlı teknik inceleme, doğrulama ve yol haritası için Eclipta hizmetlerini inceleyebilirsiniz.</p>
+    </div>
+    <a class="button-link" href="{{ cta_url }}">{{ cta_label }}</a>
+  </section>
+
+  <footer class="report-footer">
+    <div><span class="eclipta-wordmark">eclipta</span><span class="eclipta-slogan">Sürdürülebilir BT Çözümleri</span></div>
+    <span>SiberKOBİ · Riskini bugün gör, yarını koru.</span>
+  </footer>
+
+  <div class="actions no-print">
+    <a class="secondary-link" href="{{ url_for('web.assessment') }}">Değerlendirmeyi yeniden yap</a>
+    <button type="button" data-action="print">Yazdır / PDF olarak kaydet</button>
   </div>
-</section>
-
-<section class="category">
-  <h2>Öncelikli iyileştirmeler</h2>
-  <div class="findings">
-    {% for finding in findings %}
-      <article class="finding">
-        <div>
-          <span class="qid">{{ finding.id }}</span>
-          <strong>{{ finding.text }}</strong>
-        </div>
-        <span class="status">{{ 'Hayır' if finding.response == 'hayir' else 'Kısmen' }}</span>
-      </article>
-    {% else %}
-      <p>İyileştirme gerektiren yanıt bulunmadı.</p>
-    {% endfor %}
-  </div>
-</section>
-
-<section class="cta">
-  <h2>Daha detaylı teknik değerlendirme gerekiyor mu?</h2>
-  <p>Bu araç hızlı bir öz değerlendirmedir. Kapsamlı teknik inceleme, doğrulama ve yol haritası için Eclipta hizmetlerini inceleyebilirsiniz.</p>
-  <a class="button-link" href="{{ cta_url }}">{{ cta_label }}</a>
-</section>
-
-<div class="actions no-print">
-  <a class="secondary-link" href="{{ url_for('web.index') }}">Değerlendirmeyi yeniden yap</a>
-  <button type="button" data-action="print">Yazdır / PDF olarak kaydet</button>
 </div>
 {% endblock %}
