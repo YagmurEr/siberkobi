@@ -1352,3 +1352,44 @@ body {
   color: #52677d;
   line-height: 1.55;
 }
+
+/* Scan activity feedback */
+.scan-progress-card.is-running {
+  border-color: #a9c6dc;
+  box-shadow: 0 16px 38px rgba(49,95,130,.10);
+}
+.scan-running-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.scan-running-title .ui-kicker { margin-bottom: 0; }
+.scan-running-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #4f84b7;
+  box-shadow: 0 0 0 0 rgba(79,132,183,.45);
+  animation: scanPulse 1.2s ease-out infinite;
+}
+.scan-steps [data-progress-step] {
+  position: relative;
+  opacity: .55;
+  transition: opacity .2s ease, transform .2s ease;
+}
+.scan-steps [data-progress-step]::marker { color: #94a3b8; }
+.scan-steps [data-progress-step].is-active {
+  opacity: 1;
+  transform: translateX(3px);
+  font-weight: 800;
+  color: #315f82;
+}
+.scan-steps [data-progress-step].is-done {
+  opacity: .9;
+  color: #3d7550;
+}
+@keyframes scanPulse {
+  0% { box-shadow: 0 0 0 0 rgba(79,132,183,.45); opacity: 1; }
+  70% { box-shadow: 0 0 0 10px rgba(79,132,183,0); opacity: .75; }
+  100% { box-shadow: 0 0 0 0 rgba(79,132,183,0); opacity: 1; }
+}
