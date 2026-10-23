@@ -1,116 +1,158 @@
 {% extends "base.html" %}
+{% from "_report_macros.html" import page_header, page_footer %}
 {% block title %}SiberKOBİ · Web Analiz Sonucu{% endblock %}
 {% block content %}
-<div class="report-shell">
-  <header class="report-header">
-    <img class="report-logo" src="{{ url_for('static', filename='siberkobi-logo.svg') }}" alt="SiberKOBİ">
-    <div>
-      <p class="report-kicker">WEB ANALİZ RAPORU</p>
-      <h1>{{ report.target }}</h1>
-      <p>Dışarıdan görünen temel web güvenliği görünürlüğü</p>
-    </div>
-  </header>
+<div class="report-book">
+  <section class="report-sheet">
+    {{ page_header("Web Analiz Raporu", report.target, 1) }}
+    <div class="report-page-content">
+      <p class="report-kicker">YÖNETİCİ ÖZETİ</p>
+      <h1 class="report-title">{{ report.target }}</h1>
+      <p class="report-intro">Dışarıdan görülebilen temel web güvenliği, servis yüzeyi ve teknoloji izlerinin sınırlı analizi.</p>
 
-  <section class="report-summary-grid">
-    <article class="report-metric">
-      <span>Açık port</span>
-      <strong>{{ report.summary.open_web_ports }}</strong>
-    </article>
-    <article class="report-metric">
-      <span>Toplam bulgu</span>
-      <strong>{{ report.summary.findings_total }}</strong>
-    </article>
-    <article class="report-metric report-metric--risk">
-      <span>Yüksek / Kritik</span>
-      <strong>{{ report.summary.high + report.summary.critical }}</strong>
-    </article>
-  </section>
+      <div class="report-summary-grid compact">
+        <article class="report-metric"><span>Açık TCP portu</span><strong>{{ report.summary.open_web_ports }}</strong></article>
+        <article class="report-metric"><span>Teknoloji izi</span><strong>{{ report.summary.technology_count }}</strong></article>
+        <article class="report-metric report-metric--risk"><span>Yüksek / Kritik</span><strong>{{ report.summary.high + report.summary.critical }}</strong></article>
+      </div>
 
-  <section class="report-section">
-    <div class="report-section-title"><span>01</span><h2>DNS ve hedef</h2></div>
-    <div class="report-panel">
-      <p><strong>Alan adı:</strong> {{ report.target }}</p>
-      <p><strong>Çözümlenen IP:</strong> {{ report.resolved_ips | join(", ") }}</p>
-    </div>
-  </section>
+      <div class="report-section compact-section">
+        <div class="report-section-title"><span>01</span><h2>Hedef ve DNS</h2></div>
+        <div class="key-value-grid">
+          <div><span>Alan adı</span><strong>{{ report.target }}</strong></div>
+          <div><span>IP adresleri</span><strong>{{ report.resolved_ips | join(", ") }}</strong></div>
+          <div><span>HTTPS</span><strong>{% if report.https.ok %}{{ report.https.status }} {{ report.https.reason }}{% else %}Yanıt yok{% endif %}</strong></div>
+          <div><span>TLS</span><strong>{% if report.tls.ok %}{{ report.tls.version or "Bilinmiyor" }}{% else %}Kurulamadı{% endif %}</strong></div>
+        </div>
+      </div>
 
-  <section class="report-section">
-    <div class="report-section-title"><span>02</span><h2>Port ve servis görünürlüğü</h2></div>
-    <div class="scan-table-wrap">
-      <table class="scan-table report-table">
-        <thead><tr><th>Port</th><th>Kategori</th><th>Beklenen servis</th><th>Durum</th></tr></thead>
-        <tbody>
-        {% for item in report.ports %}
-          <tr class="{{ 'row-open' if item.open else '' }}">
-            <td>{{ item.port }}</td>
-            <td>{{ item.category }}</td>
-            <td>{{ item.service }}</td>
-            <td><span class="report-status {{ 'is-open' if item.open else 'is-closed' }}">{{ "Açık" if item.open else "Kapalı / ulaşılamadı" }}</span></td>
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
-    </div>
-    <p class="report-note">
-      Bu kontrol 31 sabit TCP portuyla sınırlıdır. Port adı çalışan ürünün kesin
-      doğrulaması değildir; yalnızca yaygın servis eşlemesidir. DHCP 67/68 UDP
-      olduğu için bu TCP görünürlük kontrolüne dahil edilmez.
-    </p>
-  </section>
-
-  <section class="report-section">
-    <div class="report-section-title"><span>03</span><h2>HTTP / HTTPS ve TLS</h2></div>
-    <div class="report-two-col">
-      <article class="report-panel">
-        <h3>HTTP / HTTPS</h3>
-        <p><strong>HTTP:</strong> {% if report.http.ok %}{{ report.http.status }} {{ report.http.reason }}{% else %}Yanıt alınamadı{% endif %}</p>
-        <p><strong>HTTPS:</strong> {% if report.https.ok %}{{ report.https.status }} {{ report.https.reason }}{% else %}Yanıt alınamadı{% endif %}</p>
-      </article>
-      <article class="report-panel">
-        <h3>TLS</h3>
-        {% if report.tls.ok %}
-          <p><strong>Protokol:</strong> {{ report.tls.version or "Bilinmiyor" }}</p>
-          <p><strong>Cipher:</strong> {{ report.tls.cipher or "Bilinmiyor" }}</p>
-          <p><strong>Issuer:</strong> {{ report.tls.issuer_cn or "Bilinmiyor" }}</p>
-          <p><strong>Kalan gün:</strong> {{ report.tls.days_remaining if report.tls.days_remaining is not none else "Bilinmiyor" }}</p>
+      <div class="report-section compact-section">
+        <div class="report-section-title"><span>02</span><h2>Web teknolojisi parmak izi</h2></div>
+        {% if report.technology %}
+        <div class="technology-list">
+          {% for item in report.technology %}
+          <article class="technology-item">
+            <div><strong>{{ item.name }}</strong><span>{{ item.category }} · Güven: {{ item.confidence }}</span></div>
+            <p><b>Kanıt:</b> {{ item.evidence }}</p>
+            <p><b>Temel öneri:</b> {{ item.guidance }}</p>
+          </article>
+          {% endfor %}
+        </div>
         {% else %}
-          <p>TLS oturumu kurulamadı.</p>
+        <p class="report-note">İndirilen ana sayfa ve HTTP başlıklarından güvenilir bir teknoloji izi çıkarılamadı.</p>
         {% endif %}
-      </article>
+      </div>
     </div>
+    {{ page_footer(1) }}
   </section>
 
-  <section class="report-section">
-    <div class="report-section-title"><span>04</span><h2>Öncelikli bulgular</h2></div>
-    {% if report.findings %}
-    <div class="report-findings">
-      {% for finding in report.findings %}
-      <article class="report-finding">
-        <span class="severity severity--{{ finding.severity }}">{{ finding.severity | upper }}</span>
-        <div><strong>{{ finding.title }}</strong><p>{{ finding.detail }}</p></div>
-      </article>
-      {% endfor %}
+  <section class="report-sheet">
+    {{ page_header("Web Analiz Raporu", report.target, 2) }}
+    <div class="report-page-content">
+      <div class="report-section-title page-heading"><span>03</span><h2>Port ve servis görünürlüğü · I</h2></div>
+      <p class="report-note">Port adları yaygın servis eşlemesidir; çalışan ürün veya sürüm doğrulaması değildir.</p>
+      <div class="scan-table-wrap flat">
+        <table class="scan-table report-table dense-table">
+          <thead><tr><th>Port</th><th>Kategori</th><th>Servis</th><th>Durum</th></tr></thead>
+          <tbody>
+          {% for item in report.ports[:16] %}
+            <tr class="{{ 'row-open' if item.open else '' }}">
+              <td>{{ item.port }}</td><td>{{ item.category }}</td><td>{{ item.service }}</td>
+              <td><span class="report-status {{ 'is-open' if item.open else 'is-closed' }}">{{ "Açık" if item.open else "Kapalı" }}</span></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
-    {% else %}
-    <div class="report-panel"><p>Bu temel kontrolde raporlanacak bulgu oluşmadı.</p></div>
-    {% endif %}
+    {{ page_footer(2) }}
   </section>
 
-  <section class="report-section">
-    <div class="report-section-title"><span>05</span><h2>CVE / CISA KEV durumu</h2></div>
-    <div class="report-panel">
-      <p><strong>CVE:</strong> {{ report.cve.reason }}</p>
-      <p><strong>KEV:</strong> {{ report.kev.reason }}</p>
-      <p class="report-note">Servis sürümü doğrulanmadan CVE veya KEV eşleşmesi raporlanmaz.</p>
+  <section class="report-sheet">
+    {{ page_header("Web Analiz Raporu", report.target, 3) }}
+    <div class="report-page-content">
+      <div class="report-section-title page-heading"><span>04</span><h2>Port ve servis görünürlüğü · II</h2></div>
+      <div class="scan-table-wrap flat">
+        <table class="scan-table report-table dense-table">
+          <thead><tr><th>Port</th><th>Kategori</th><th>Servis</th><th>Durum</th></tr></thead>
+          <tbody>
+          {% for item in report.ports[16:] %}
+            <tr class="{{ 'row-open' if item.open else '' }}">
+              <td>{{ item.port }}</td><td>{{ item.category }}</td><td>{{ item.service }}</td>
+              <td><span class="report-status {{ 'is-open' if item.open else 'is-closed' }}">{{ "Açık" if item.open else "Kapalı" }}</span></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="report-section compact-section">
+        <div class="report-section-title"><span>05</span><h2>HTTP ve TLS</h2></div>
+        <div class="key-value-grid">
+          <div><span>HTTP</span><strong>{% if report.http.ok %}{{ report.http.status }} {{ report.http.reason }}{% else %}Yanıt yok{% endif %}</strong></div>
+          <div><span>HTTPS</span><strong>{% if report.https.ok %}{{ report.https.status }} {{ report.https.reason }}{% else %}Yanıt yok{% endif %}</strong></div>
+          <div><span>TLS protokolü</span><strong>{{ report.tls.version if report.tls.ok else "Bilinmiyor" }}</strong></div>
+          <div><span>Sertifika kalan gün</span><strong>{{ report.tls.days_remaining if report.tls.ok and report.tls.days_remaining is not none else "Bilinmiyor" }}</strong></div>
+        </div>
+      </div>
     </div>
+    {{ page_footer(3) }}
   </section>
 
-  <footer class="report-footer">
-    <div><span class="eclipta-wordmark">eclipta</span><span class="eclipta-slogan">Sürdürülebilir BT Çözümleri</span></div>
-    <span>SiberKOBİ · Riskini bugün gör, yarını koru.</span>
-  </footer>
+  <section class="report-sheet">
+    {{ page_header("Web Analiz Raporu", report.target, 4) }}
+    <div class="report-page-content">
+      <div class="report-section-title page-heading"><span>06</span><h2>Öncelikli bulgular · I</h2></div>
+      {% if report.findings %}
+      <div class="report-findings detailed-findings">
+        {% for finding in report.findings[:7] %}
+        <article class="report-finding">
+          <span class="severity severity--{{ finding.severity }}">{{ finding.severity | upper }}</span>
+          <div>
+            <strong>{{ finding.title }}</strong>
+            <p>{{ finding.detail }}</p>
+            <dl class="finding-guidance"><dt>Neden önemli?</dt><dd>{{ finding.why }}</dd><dt>Nasıl düzeltilir?</dt><dd>{{ finding.fix }}</dd></dl>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="report-note">Bu temel kontrolde raporlanacak bulgu oluşmadı.</p>
+      {% endif %}
+    </div>
+    {{ page_footer(4) }}
+  </section>
 
-  <div class="actions no-print">
+  <section class="report-sheet">
+    {{ page_header("Web Analiz Raporu", report.target, 5) }}
+    <div class="report-page-content">
+      <div class="report-section-title page-heading"><span>07</span><h2>Öncelikli bulgular · II</h2></div>
+      {% if report.findings[7:] %}
+      <div class="report-findings detailed-findings">
+        {% for finding in report.findings[7:] %}
+        <article class="report-finding">
+          <span class="severity severity--{{ finding.severity }}">{{ finding.severity | upper }}</span>
+          <div>
+            <strong>{{ finding.title }}</strong>
+            <p>{{ finding.detail }}</p>
+            <dl class="finding-guidance"><dt>Neden önemli?</dt><dd>{{ finding.why }}</dd><dt>Nasıl düzeltilir?</dt><dd>{{ finding.fix }}</dd></dl>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="report-note">Ek bulgu bulunmuyor.</p>
+      {% endif %}
+
+      <div class="report-section compact-section">
+        <div class="report-section-title"><span>08</span><h2>CVE / CISA KEV</h2></div>
+        <p><strong>CVE:</strong> {{ report.cve.reason }}</p>
+        <p><strong>KEV:</strong> {{ report.kev.reason }}</p>
+      </div>
+    </div>
+    {{ page_footer(5) }}
+  </section>
+
+  <div class="actions no-print report-actions">
     <a class="button-link" href="{{ url_for('web.openscan') }}">Yeni Analiz</a>
     <button type="button" data-action="print">Yazdır / PDF</button>
   </div>

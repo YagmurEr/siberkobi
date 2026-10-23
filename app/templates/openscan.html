@@ -45,14 +45,17 @@
     </form>
 
     <section class="scan-progress-card" data-scan-progress hidden aria-live="polite">
-      <p class="ui-kicker ui-kicker--dark">ANALİZ ÇALIŞIYOR</p>
+      <div class="scan-running-title">
+        <span class="scan-running-dot" aria-hidden="true"></span>
+        <p class="ui-kicker ui-kicker--dark">ANALİZ ÇALIŞIYOR</p>
+      </div>
       <h2>Hedef üzerinde temel kontroller yapılıyor</h2>
       <ol class="scan-steps">
-        <li>Alan adı ve public IP doğrulaması</li>
-        <li>Web ve veritabanı port görünürlüğü</li>
-        <li>HTTP / HTTPS yanıt kontrolü</li>
-        <li>TLS sertifika ve protokol kontrolü</li>
-        <li>Security header ve risk bulgularının hazırlanması</li>
+        <li data-progress-step>Alan adı ve public IP doğrulaması</li>
+        <li data-progress-step>Web, veritabanı ve yönetim port görünürlüğü</li>
+        <li data-progress-step>HTTP / HTTPS ve TLS kontrolü</li>
+        <li data-progress-step>Web teknolojisi parmak izi</li>
+        <li data-progress-step>Security header ve deterministik bulguların hazırlanması</li>
       </ol>
     </section>
   </div>
@@ -70,6 +73,7 @@
         <li>HTTP / HTTPS yanıtı</li>
         <li>TLS sertifikası</li>
         <li>Security headers</li>
+        <li>Web teknolojisi / CMS izi</li>
         <li>31 sabit TCP port kontrolü</li>
       </ul>
     </div>

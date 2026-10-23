@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import html
+import re
 import time
 from html.parser import HTMLParser
 from http.client import HTTPConnection, HTTPSConnection
@@ -10,8 +11,9 @@ from app.webscan.scanner import ScanValidationError, normalize_target, resolve_p
 
 MAX_BODY_BYTES = 1_000_000
 MAX_REDIRECTS = 3
-MAX_LINK_CHECKS = 12
-USER_AGENT = "SiberKOBI-SEOAnaliz/0.2"
+MAX_LINK_CHECKS = 6
+MAX_STRUCTURE_PAGES = 4
+USER_AGENT = "SiberKOBI-SEOAnaliz/0.4"
 
 
 GUIDANCE = {
@@ -82,6 +84,10 @@ GUIDANCE = {
     "Google Analytics etiketi tespit edilemedi": {
         "why": "Bu durum doğrudan SEO hatası değildir; ancak organik trafik ve kullanıcı davranışını ölçmeyi zorlaştırır.",
         "fix": "Ölçüm gerekiyorsa GA4 property oluşturun, web data stream ekleyin ve Google tag veya Google Tag Manager üzerinden etiketi tüm ilgili sayfalara yerleştirin.",
+    },
+    "H1 yapısı örnekleminde sorun var": {
+        "why": "Sayfalardaki ana başlık hiyerarşisinin tutarlı olması kullanıcıların ve arama motorlarının içeriği daha kolay anlamasına yardımcı olur.",
+        "fix": "Listelenen sayfalarda ana konu için tek bir açıklayıcı H1 bırakın; diğer üst seviye başlıkları içerik yapısına göre H2/H3 olarak düzenleyin.",
     },
 }
 
@@ -296,7 +302,7 @@ def _check_links(base_url: str, links: list[str]) -> list[dict]:
     results = []
     for url in candidates:
         try:
-            response = fetch_url(url, method="HEAD", timeout=3.0, redirects_left=2)
+            response = fetch_url(url, method="HEAD", timeout=1.5, redirects_left=2)
             status = response["status"]
         except ScanValidationError:
             status = None
@@ -308,6 +314,49 @@ def _check_links(base_url: str, links: list[str]) -> list[dict]:
             }
         )
     return results
+
+
+def _inspect_page_structure(base_url: str, links: list[str]) -> list[dict]:
+    base_host = normalize_target(urlsplit(base_url).hostname or "")
+    candidates = [base_url]
+    seen = {base_url}
+
+    for raw in links:
+        if raw.startswith(("#", "mailto:", "tel:", "javascript:")):
+            continue
+        absolute = urljoin(base_url, raw).split("#", 1)[0]
+        parsed = urlsplit(absolute)
+        if parsed.scheme not in {"http", "https"}:
+            continue
+        try:
+            host = normalize_target(parsed.hostname or "")
+        except ScanValidationError:
+            continue
+        if host != base_host or absolute in seen:
+            continue
+        seen.add(absolute)
+        candidates.append(absolute)
+        if len(candidates) >= MAX_STRUCTURE_PAGES:
+            break
+
+    pages: list[dict] = []
+    for url in candidates:
+        try:
+            response = fetch_url(url, timeout=2.0, redirects_left=2)
+            page_html = _decode_body(response)
+            parser = _SEOParser()
+            parser.feed(page_html)
+            pages.append(
+                {
+                    "url": response["final_url"],
+                    "status": response["status"],
+                    "h1_count": len(parser.headings["h1"]),
+                    "h1": parser.headings["h1"][:5],
+                }
+            )
+        except ScanValidationError:
+            pages.append({"url": url, "status": None, "h1_count": None, "h1": []})
+    return pages
 
 
 def _finding(severity: str, title: str, detail: str) -> dict:
@@ -337,20 +386,28 @@ def run_seo_audit(raw_target: str) -> dict:
     og_title = parser.meta.get("og:title", "")
     og_description = parser.meta.get("og:description", "")
     twitter_card = parser.meta.get("twitter:card", "")
+    html_upper = html_text.upper()
     html_lower = html_text.lower()
-    analytics_detected = any(
-        marker in html_lower
+    ga4_ids = sorted(set(re.findall(r"\bG-[A-Z0-9]{5,}\b", html_upper)))
+    gtm_ids = sorted(set(re.findall(r"\bGTM-[A-Z0-9]+\b", html_upper)))
+    analytics_markers = [
+        marker
         for marker in (
             "googletagmanager.com/gtag/js",
             "google-analytics.com",
             "googletagmanager.com/gtm.js",
+            "googletagmanager.com/ns.html",
             "gtag(",
+            "datalayer",
         )
-    )
+        if marker in html_lower
+    ]
+    analytics_detected = bool(ga4_ids or gtm_ids or analytics_markers)
 
     robots = _fetch_optional(final_url, "/robots.txt")
     sitemap = _fetch_optional(final_url, "/sitemap.xml")
     links = _check_links(final_url, parser.links)
+    page_structure = _inspect_page_structure(final_url, parser.links)
 
     findings: list[dict] = []
 
@@ -385,9 +442,31 @@ def run_seo_audit(raw_target: str) -> dict:
             _finding(
                 "medium",
                 "Birden fazla H1 var",
-                f"Sayfada {len(parser.headings['h1'])} adet H1 etiketi bulundu.",
+                (
+                    f"{final_url} sayfasında {len(parser.headings['h1'])} adet H1 etiketi bulundu: "
+                    + " | ".join(parser.headings["h1"][:5])
+                ),
             )
         )
+
+    h1_issue_pages = [
+        item
+        for item in page_structure
+        if item["url"] != final_url
+        and item["h1_count"] is not None
+        and item["h1_count"] != 1
+    ]
+    if h1_issue_pages:
+        affected = ", ".join(
+            f"{item['url']} ({item['h1_count']} H1)" for item in h1_issue_pages
+        )
+        finding = _finding(
+            "medium",
+            "H1 yapısı örnekleminde sorun var",
+            f"Sınırlı sayfa örnekleminde H1 yapısı gözden geçirilmesi gereken sayfalar: {affected}",
+        )
+        finding["affected_pages"] = [item["url"] for item in h1_issue_pages]
+        findings.append(finding)
 
     if not parser.canonical:
         findings.append(
@@ -474,6 +553,9 @@ def run_seo_audit(raw_target: str) -> dict:
             )
         )
 
+    for finding in findings:
+        finding.setdefault("page", final_url)
+
     summary = {
         "findings_total": len(findings),
         "high": sum(1 for item in findings if item["severity"] == "high"),
@@ -508,7 +590,15 @@ def run_seo_audit(raw_target: str) -> dict:
                 if analytics_detected
                 else "Google Analytics / Tag Manager etiketi tespit edilemedi"
             ),
+            "ga4_ids": ga4_ids,
+            "gtm_ids": gtm_ids,
+            "markers": analytics_markers,
+            "scope_note": (
+                "Kontrol indirilen HTML kaynağı üzerinde yapılır. Consent manager veya "
+                "çalışma anında JavaScript ile eklenen etiketler bu temel kontrolde görünmeyebilir."
+            ),
         },
+        "page_structure": page_structure,
         "robots": robots,
         "sitemap": sitemap,
         "og": {

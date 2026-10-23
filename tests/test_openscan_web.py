@@ -27,10 +27,10 @@ def test_web_analysis_renders_report(monkeypatch) -> None:
         "target": "example.com",
         "resolved_ips": ["93.184.216.34"],
         "ports": [
-            {"port": 80, "open": True, "service": "HTTP"},
-            {"port": 443, "open": True, "service": "HTTPS"},
-            {"port": 8080, "open": False, "service": "HTTP-alt"},
-            {"port": 8443, "open": False, "service": "HTTPS-alt"},
+            {"port": 80, "open": True, "service": "HTTP", "category": "Web"},
+            {"port": 443, "open": True, "service": "HTTPS", "category": "Web"},
+            {"port": 8080, "open": False, "service": "HTTP-alt", "category": "Web"},
+            {"port": 8443, "open": False, "service": "HTTPS-alt", "category": "Web"},
         ],
         "http": {"ok": True, "status": 301, "reason": "Moved", "headers": {}},
         "https": {"ok": True, "status": 200, "reason": "OK", "headers": {}},
@@ -42,12 +42,23 @@ def test_web_analysis_renders_report(monkeypatch) -> None:
             "issuer_cn": "Example CA",
             "days_remaining": 80,
         },
+        "technology": [
+            {
+                "name": "WordPress",
+                "category": "CMS",
+                "confidence": "yüksek",
+                "evidence": "HTML içinde wp-content izi",
+                "guidance": "WordPress bileşenlerini güncel tutun.",
+            }
+        ],
+        "technology_source_status": 200,
         "findings": [],
         "cve": {"status": "not_evaluated", "reason": "CVE doğrulanmadı."},
         "kev": {"status": "not_evaluated", "reason": "KEV doğrulanmadı."},
         "summary": {
             "open_web_ports": 2,
             "findings_total": 0,
+            "technology_count": 1,
             "critical": 0,
             "high": 0,
             "medium": 0,
@@ -67,4 +78,5 @@ def test_web_analysis_renders_report(monkeypatch) -> None:
     assert "93.184.216.34" in body
     assert "TLSv1.3" in body
     assert "CVE doğrulanmadı." in body
+    assert "WordPress" in body
     assert response.headers["Cache-Control"] == "no-store"
