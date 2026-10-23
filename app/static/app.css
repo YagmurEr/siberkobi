@@ -1329,3 +1329,26 @@ body {
 .home-tools--compact .section-heading-row {
   margin-top: 0;
 }
+
+.seo-guidance {
+  min-width: 0;
+  flex: 1;
+}
+.guidance-row {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #edf1f5;
+}
+.guidance-row > span {
+  display: block;
+  margin-bottom: 4px;
+  color: #315f82;
+  font-size: .76rem;
+  font-weight: 850;
+  letter-spacing: .04em;
+}
+.guidance-row p {
+  margin: 0;
+  color: #52677d;
+  line-height: 1.55;
+}
