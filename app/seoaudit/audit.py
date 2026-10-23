@@ -388,8 +388,8 @@ def run_seo_audit(raw_target: str) -> dict:
     twitter_card = parser.meta.get("twitter:card", "")
     html_upper = html_text.upper()
     html_lower = html_text.lower()
-    ga4_ids = sorted(set(re.findall(r"\\bG-[A-Z0-9]{5,}\\b", html_upper)))
-    gtm_ids = sorted(set(re.findall(r"\\bGTM-[A-Z0-9]+\\b", html_upper)))
+    ga4_ids = sorted(set(re.findall(r"\bG-[A-Z0-9]{5,}\b", html_upper)))
+    gtm_ids = sorted(set(re.findall(r"\bGTM-[A-Z0-9]+\b", html_upper)))
     analytics_markers = [
         marker
         for marker in (
