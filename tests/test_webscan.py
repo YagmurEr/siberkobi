@@ -4,6 +4,7 @@ import pytest
 
 from app.webscan.scanner import (
     ScanValidationError,
+    detect_web_technologies,
     evaluate_headers,
     normalize_target,
     resolve_public_ips,
@@ -77,3 +78,24 @@ def test_free_webscan_port_set_is_bounded() -> None:
     assert len(WEB_PORTS) == 31
     assert 67 not in WEB_PORTS
     assert 68 not in WEB_PORTS
+
+
+def test_detect_web_technologies_from_html_and_headers() -> None:
+    technologies = detect_web_technologies(
+        {
+            "ok": True,
+            "headers": {
+                "server": "LiteSpeed",
+                "x-powered-by": "PHP/8.3",
+                "cf-ray": "abc123",
+            },
+            "body": '<html><link href="/wp-content/theme.css"></html>',
+        }
+    )
+    by_name = {item["name"]: item for item in technologies}
+
+    assert "WordPress" in by_name
+    assert "LiteSpeed" in by_name
+    assert "PHP" in by_name
+    assert "Cloudflare" in by_name
+    assert by_name["WordPress"]["guidance"]
