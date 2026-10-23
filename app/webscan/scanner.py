@@ -8,7 +8,7 @@ from datetime import UTC, datetime
 from http.client import HTTPConnection, HTTPSConnection
 from urllib.parse import urlsplit
 
-WEB_PORTS = (80, 443, 8080, 8443)
+WEB_PORTS = (80, 443, 8080, 8443, 1433, 1521, 3306, 5432, 6379, 27017)
 SECURITY_HEADERS = {
     "strict-transport-security": "HSTS",
     "content-security-policy": "Content-Security-Policy",
@@ -87,7 +87,18 @@ def resolve_public_ips(host: str) -> list[str]:
 
 
 def scan_web_ports(host: str, timeout: float = 1.0) -> list[PortResult]:
-    services = {80: "HTTP", 443: "HTTPS", 8080: "HTTP-alt", 8443: "HTTPS-alt"}
+    services = {
+        80: "HTTP",
+        443: "HTTPS",
+        8080: "HTTP-alt",
+        8443: "HTTPS-alt",
+        1433: "MSSQL",
+        1521: "Oracle DB",
+        3306: "MySQL",
+        5432: "PostgreSQL",
+        6379: "Redis",
+        27017: "MongoDB",
+    }
     results: list[PortResult] = []
     for port in WEB_PORTS:
         opened = False
@@ -203,6 +214,27 @@ def build_findings(report: dict) -> list[dict]:
                 "detail": "HTTP erişilebilir ancak 443/TCP kapalı görünüyor.",
             }
         )
+
+    database_ports = {
+        1433: "MSSQL",
+        1521: "Oracle DB",
+        3306: "MySQL",
+        5432: "PostgreSQL",
+        6379: "Redis",
+        27017: "MongoDB",
+    }
+    for port, service in database_ports.items():
+        if port in open_ports:
+            findings.append(
+                {
+                    "severity": "high",
+                    "title": f"{service} portu internete açık görünüyor",
+                    "detail": (
+                        f"{port}/TCP erişilebilir. Bu sonuç yalnız port görünürlüğünü "
+                        "gösterir; çalışan ürün/sürüm doğrulaması değildir."
+                    ),
+                }
+            )
 
     tls = report["tls"]
     if tls.get("ok") and tls.get("days_remaining") is not None:
