@@ -104,3 +104,48 @@ def test_findings_include_deterministic_guidance(monkeypatch) -> None:
     assert finding["fix"]
     assert report["robots_meta_status"].startswith("Normal")
     assert report["analytics"]["detected"] is False
+
+
+def test_ga4_gtm_and_h1_page_evidence(monkeypatch) -> None:
+    root = b"""
+    <html><head>
+      <title>Example Site With A Useful Descriptive Title</title>
+      <meta name="description" content="This is a sufficiently descriptive example meta description for the page and the test case.">
+      <meta name="viewport" content="width=device-width">
+      <link rel="canonical" href="https://example.com/">
+      <script src="https://www.googletagmanager.com/gtag/js?id=G-ABC12345"></script>
+      <script>window.dataLayer=window.dataLayer||[]; gtag('config','G-ABC12345');</script>
+    </head><body>
+      <h1>Main</h1>
+      <a href="/about">About</a>
+    </body></html>
+    """
+    about = b"<html><head><title>About Example Company</title></head><body><h1>About</h1><h1>Team</h1></body></html>"
+
+    def fake_fetch(url, **kwargs):
+        body = about if "/about" in url else root
+        return {
+            "url": url,
+            "final_url": url,
+            "status": 200,
+            "reason": "OK",
+            "headers": {"content-type": "text/html; charset=utf-8"},
+            "body": b"" if kwargs.get("method") == "HEAD" else body,
+            "elapsed_ms": 80,
+        }
+
+    monkeypatch.setattr("app.seoaudit.audit.normalize_url", lambda raw: "https://example.com/")
+    monkeypatch.setattr("app.seoaudit.audit.fetch_url", fake_fetch)
+    monkeypatch.setattr(
+        "app.seoaudit.audit._fetch_optional",
+        lambda base, path: {"ok": True, "status": 200, "url": base + path, "text": ""},
+    )
+
+    report = run_seo_audit("example.com")
+
+    assert report["analytics"]["detected"] is True
+    assert "G-ABC12345" in report["analytics"]["ga4_ids"]
+    about_page = next(item for item in report["page_structure"] if "/about" in item["url"])
+    assert about_page["h1_count"] == 2
+    titles = {item["title"] for item in report["findings"]}
+    assert "H1 yapısı örnekleminde sorun var" in titles
