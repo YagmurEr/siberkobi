@@ -14,6 +14,78 @@ MAX_LINK_CHECKS = 12
 USER_AGENT = "SiberKOBI-SEOAnaliz/0.2"
 
 
+GUIDANCE = {
+    "Title etiketi yok": {
+        "why": "Arama motorları ve tarayıcılar sayfanın ana konusunu anlamak için title etiketini kullanır.",
+        "fix": "Sayfanın <head> bölümüne, içeriği açıkça tanımlayan benzersiz bir <title> etiketi ekleyin.",
+    },
+    "Title uzunluğu iyileştirilebilir": {
+        "why": "Çok kısa veya çok uzun başlıklar arama sonuçlarında bağlam kaybına veya kesilmeye yol açabilir.",
+        "fix": "Başlığı sayfanın konusunu doğal biçimde özetleyecek şekilde yaklaşık 30–65 karakter aralığında düzenleyin.",
+    },
+    "Meta description yok": {
+        "why": "Meta description doğrudan sıralama garantisi değildir ancak arama sonucundaki açıklamanın daha anlamlı görünmesine yardımcı olabilir.",
+        "fix": "Sayfayı özetleyen, kullanıcıya değer önerisini anlatan benzersiz bir meta description ekleyin.",
+    },
+    "Meta description uzunluğu gözden geçirilmeli": {
+        "why": "Aşırı kısa açıklamalar yeterli bağlam vermeyebilir; çok uzun açıklamalar arama sonuçlarında kesilebilir.",
+        "fix": "Açıklamayı doğal ve özgün biçimde yaklaşık 70–170 karakter aralığında tutmayı değerlendirin.",
+    },
+    "H1 başlığı yok": {
+        "why": "H1, sayfanın ana başlığını ve içerik hiyerarşisini kullanıcı ve arama motorları için daha açık hale getirir.",
+        "fix": "Sayfanın ana konusunu ifade eden tek ve açıklayıcı bir H1 başlığı ekleyin.",
+    },
+    "Birden fazla H1 var": {
+        "why": "Birden fazla H1 tek başına ceza nedeni değildir; ancak ana başlık hiyerarşisini gereksiz yere belirsizleştirebilir.",
+        "fix": "Ana sayfa başlığını H1 olarak bırakın. Diğer üst seviye başlıkları içerik yapısına göre H2 veya H3 olarak düzenleyin.",
+    },
+    "Canonical etiketi yok": {
+        "why": "Canonical etiketi benzer veya aynı içeriğin birden fazla URL'de bulunması halinde tercih edilen URL'nin belirtilmesine yardımcı olur.",
+        "fix": "Sayfanın <head> bölümüne tercih edilen mutlak URL'yi gösteren rel=\"canonical\" bağlantısı ekleyin.",
+    },
+    "Viewport meta etiketi yok": {
+        "why": "Viewport tanımı mobil cihazlarda sayfanın doğru ölçeklenmesini ve kullanılabilirliğini etkiler.",
+        "fix": "Head bölümüne <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> ekleyin.",
+    },
+    "robots.txt erişilemiyor": {
+        "why": "robots.txt arama motoru botlarına hangi alanların taranabileceği konusunda yönlendirme sağlar.",
+        "fix": "Site kökünde /robots.txt dosyasını erişilebilir hale getirin. Engelleme ihtiyacı yoksa basit bir izin veren yapı kullanabilirsiniz.",
+    },
+    "sitemap.xml erişilemiyor": {
+        "why": "Sitemap, özellikle çok sayfalı sitelerde önemli URL'lerin keşfedilmesini kolaylaştırabilir.",
+        "fix": "Geçerli bir sitemap.xml oluşturun, site kökünden erişilebilir yapın ve gerekirse robots.txt içinde konumunu belirtin.",
+    },
+    "Alt metni eksik görseller var": {
+        "why": "Alt metinler erişilebilirliği artırır ve görsel içeriğin bağlamını arama motorlarına açıklar.",
+        "fix": "Anlam taşıyan görsellere kısa ve bağlama uygun alt metin ekleyin. Süs amaçlı görsellerde boş alt (alt=\"\") kullanın.",
+    },
+    "Open Graph alanları eksik": {
+        "why": "Open Graph alanları sayfa sosyal ağlarda paylaşıldığında başlık ve açıklamanın kontrollü görünmesini sağlar.",
+        "fix": "En az og:title ve og:description alanlarını ekleyin; sosyal paylaşım görünümü önemliyse og:image ve og:url alanlarını da değerlendirin.",
+    },
+    "Twitter/X card meta etiketi yok": {
+        "why": "Twitter/X card etiketi paylaşım önizlemesinin daha kontrollü oluşturulmasına yardımcı olur.",
+        "fix": "Paylaşım önizlemesi gerekiyorsa twitter:card ve ilgili sosyal meta alanlarını ekleyin.",
+    },
+    "JSON-LD bulunamadı": {
+        "why": "Yapılandırılmış veri uygun içerik türlerinde arama motorlarının sayfa varlıklarını daha iyi anlamasına yardımcı olabilir.",
+        "fix": "Sitenizin içerik türüne gerçekten uygunsa schema.org tabanlı geçerli JSON-LD ekleyin; sırf eklemiş olmak için kullanılmamalıdır.",
+    },
+    "Kontrol edilen iç bağlantılarda hata var": {
+        "why": "Bozuk iç bağlantılar kullanıcı deneyimini ve site içi gezinmeyi olumsuz etkiler.",
+        "fix": "Hata veren bağlantıları doğru hedefe yönlendirin, güncelleyin veya artık gerekli değilse kaldırın.",
+    },
+    "Ana sayfa yanıt süresi yüksek": {
+        "why": "Yavaş ilk HTTP yanıtı kullanıcı deneyimini ve sayfa yükleme sürecini olumsuz etkileyebilir.",
+        "fix": "Sunucu yanıt süresini, uygulama işleme süresini, cache kullanımını ve hosting kaynaklarını inceleyin.",
+    },
+    "Google Analytics etiketi tespit edilemedi": {
+        "why": "Bu durum doğrudan SEO hatası değildir; ancak organik trafik ve kullanıcı davranışını ölçmeyi zorlaştırır.",
+        "fix": "Ölçüm gerekiyorsa GA4 property oluşturun, web data stream ekleyin ve Google tag veya Google Tag Manager üzerinden etiketi tüm ilgili sayfalara yerleştirin.",
+    },
+}
+
+
 class _SEOParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
@@ -239,7 +311,14 @@ def _check_links(base_url: str, links: list[str]) -> list[dict]:
 
 
 def _finding(severity: str, title: str, detail: str) -> dict:
-    return {"severity": severity, "title": title, "detail": detail}
+    guidance = GUIDANCE.get(title, {})
+    return {
+        "severity": severity,
+        "title": title,
+        "detail": detail,
+        "why": guidance.get("why", ""),
+        "fix": guidance.get("fix", ""),
+    }
 
 
 def run_seo_audit(raw_target: str) -> dict:
@@ -258,6 +337,16 @@ def run_seo_audit(raw_target: str) -> dict:
     og_title = parser.meta.get("og:title", "")
     og_description = parser.meta.get("og:description", "")
     twitter_card = parser.meta.get("twitter:card", "")
+    html_lower = html_text.lower()
+    analytics_detected = any(
+        marker in html_lower
+        for marker in (
+            "googletagmanager.com/gtag/js",
+            "google-analytics.com",
+            "googletagmanager.com/gtm.js",
+            "gtag(",
+        )
+    )
 
     robots = _fetch_optional(final_url, "/robots.txt")
     sitemap = _fetch_optional(final_url, "/sitemap.xml")
@@ -356,6 +445,15 @@ def run_seo_audit(raw_target: str) -> dict:
             _finding("info", "JSON-LD bulunamadı", "Sayfada application/ld+json script'i bulunamadı.")
         )
 
+    if not analytics_detected:
+        findings.append(
+            _finding(
+                "info",
+                "Google Analytics etiketi tespit edilemedi",
+                "Sayfanın alınan HTML içeriğinde Google Analytics veya Google Tag Manager etiketi görülmedi.",
+            )
+        )
+
     broken_links = [item for item in links if item["broken"]]
     if broken_links:
         findings.append(
@@ -398,6 +496,19 @@ def run_seo_audit(raw_target: str) -> dict:
         "canonical": parser.canonical,
         "viewport": viewport,
         "robots_meta": robots_meta,
+        "robots_meta_status": (
+            "Özel robots direktifi tanımlı"
+            if robots_meta
+            else "Normal — özel indeksleme kısıtı tanımlı değil"
+        ),
+        "analytics": {
+            "detected": analytics_detected,
+            "status": (
+                "Google Analytics / Tag Manager etiketi tespit edildi"
+                if analytics_detected
+                else "Google Analytics / Tag Manager etiketi tespit edilemedi"
+            ),
+        },
         "robots": robots,
         "sitemap": sitemap,
         "og": {
