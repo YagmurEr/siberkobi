@@ -36,7 +36,17 @@ def test_seo_renders_report(monkeypatch) -> None:
         "viewport": "width=device-width",
         "robots_meta": "index,follow",
         "robots_meta_status": "Özel robots direktifi tanımlı",
-        "analytics": {"detected": True, "status": "Google Analytics / Tag Manager etiketi tespit edildi"},
+        "analytics": {
+            "detected": True,
+            "status": "Google Analytics / Tag Manager etiketi tespit edildi",
+            "ga4_ids": ["G-ABC12345"],
+            "gtm_ids": [],
+            "markers": ["googletagmanager.com/gtag/js"],
+            "scope_note": "HTML kaynak kontrolü.",
+        },
+        "page_structure": [
+            {"url": "https://example.com/", "status": 200, "h1_count": 1, "h1": ["Main"]}
+        ],
         "robots": {"ok": True, "status": 200},
         "sitemap": {"ok": True, "status": 200},
         "og": {"title": "OG", "description": "OG desc"},
