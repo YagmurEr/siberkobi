@@ -1,80 +1,83 @@
 {% extends "base.html" %}
+{% from "_report_macros.html" import page_header, page_footer %}
 {% block title %}SiberKOBİ · Sonuç{% endblock %}
 {% block content %}
-<div class="report-shell">
-  <header class="report-header">
-    <img class="report-logo" src="{{ url_for('static', filename='siberkobi-logo.svg') }}" alt="SiberKOBİ">
-    <div>
-      <p class="report-kicker">SİBER GÜVENLİK ÖZ DEĞERLENDİRME RAPORU</p>
-      <h1>{{ evaluation.band }}</h1>
-      <p>25 soruluk teknik öz değerlendirme sonucu</p>
-    </div>
-  </header>
+<div class="report-book">
+  <section class="report-sheet">
+    {{ page_header("Siber Güvenlik Öz Değerlendirme", "25 soru · 5 güvenlik alanı", 1) }}
+    <div class="report-page-content">
+      <p class="report-kicker">YÖNETİCİ ÖZETİ</p>
+      <h1 class="report-title">{{ evaluation.band }}</h1>
+      <p class="report-intro">Yanıtlarınızdan deterministik olarak üretilen temel güvenlik görünümü ve gruplanmış iyileştirme adımları.</p>
 
-  <section class="report-summary-grid">
-    <article class="report-metric report-metric--score">
-      <span>Genel skor</span>
-      <strong>%{{ '%.2f'|format(evaluation.percentage) }}</strong>
-    </article>
-    <article class="report-metric">
-      <span>Kazanılan puan</span>
-      <strong>{{ evaluation.earned_points }}</strong>
-    </article>
-    <article class="report-metric">
-      <span>Maksimum puan</span>
-      <strong>{{ evaluation.maximum_points }}</strong>
-    </article>
+      <div class="report-summary-grid compact">
+        <article class="report-metric report-metric--score"><span>Genel skor</span><strong>%{{ '%.2f'|format(evaluation.percentage) }}</strong></article>
+        <article class="report-metric"><span>Kazanılan puan</span><strong>{{ evaluation.earned_points }}</strong></article>
+        <article class="report-metric"><span>Değerlendirilen soru</span><strong>{{ evaluation.answered }}</strong></article>
+      </div>
+
+      <div class="report-section compact-section">
+        <div class="report-section-title"><span>01</span><h2>Güvenlik alanları</h2></div>
+        <div class="report-domain-grid">
+          {% for category in data.categories %}
+            {% set score = evaluation.by_category[category.id] %}
+            <article class="report-domain">
+              <h3>{{ category.name }}</h3>
+              <strong>%{{ '%.0f'|format(score.percentage) }}</strong>
+              <p>{{ score.earned }}/{{ score.maximum }} puan</p>
+            </article>
+          {% endfor %}
+        </div>
+      </div>
+      {% if evaluation.not_applicable %}
+      <p class="report-note">{{ evaluation.not_applicable }} soru uygulanamaz olarak değerlendirme dışında bırakıldı.</p>
+      {% endif %}
+    </div>
+    {{ page_footer(1) }}
   </section>
 
-  {% if evaluation.not_applicable %}
-  <p class="report-note">{{ evaluation.not_applicable }} soru uygulanamaz olarak değerlendirme dışında bırakıldı.</p>
-  {% endif %}
-
-  <section class="report-section">
-    <div class="report-section-title"><span>01</span><h2>Güvenlik alanları</h2></div>
-    <div class="report-domain-grid">
-      {% for category in data.categories %}
-        {% set score = evaluation.by_category[category.id] %}
-        <article class="report-domain">
-          <h3>{{ category.name }}</h3>
-          <strong>%{{ '%.2f'|format(score.percentage) }}</strong>
-          <p>{{ score.earned }}/{{ score.maximum }} puan</p>
+  {% for group in action_groups %}
+  <section class="report-sheet">
+    {{ page_header("Siber Güvenlik Öz Değerlendirme", group.category_name, loop.index + 1) }}
+    <div class="report-page-content">
+      <div class="report-section-title page-heading"><span>{{ "%02d"|format(loop.index + 1) }}</span><h2>{{ group.category_name }}</h2></div>
+      {% if group.actions %}
+      <div class="assessment-action-list">
+        {% for action in group.actions %}
+        <article class="assessment-action-card">
+          <div class="assessment-action-head">
+            <span class="severity severity--{{ action.severity }}">{{ action.status }}</span>
+            <span class="trigger-ids">{{ action.question_ids | join(" · ") }}</span>
+          </div>
+          <h3>{{ action.title }}</h3>
+          <p>{{ action.action }}</p>
         </article>
-      {% endfor %}
-    </div>
-  </section>
-
-  <section class="report-section">
-    <div class="report-section-title"><span>02</span><h2>Öncelikli iyileştirmeler</h2></div>
-    <div class="report-findings">
-      {% for finding in findings %}
-        <article class="report-finding">
-          <span class="severity {{ 'severity--high' if finding.response == 'hayir' else 'severity--medium' }}">{{ 'Hayır' if finding.response == 'hayir' else 'Kısmen' }}</span>
-          <div><strong><span class="qid">{{ finding.id }}</span> {{ finding.text }}</strong></div>
-        </article>
+        {% endfor %}
+      </div>
       {% else %}
-        <div class="report-panel"><p>İyileştirme gerektiren yanıt bulunmadı.</p></div>
-      {% endfor %}
+      <div class="report-positive">
+        <strong>Bu alanda öncelikli iyileştirme oluşmadı.</strong>
+        <p>Yanıtlarınız mevcut temel kontrollerin olumlu olduğunu gösteriyor.</p>
+      </div>
+      {% endif %}
+
+      {% if loop.last %}
+      <div class="report-cta minimal-cta">
+        <div>
+          <p class="report-kicker">SONRAKİ ADIM</p>
+          <h2>Sonuçları kurumunuzda kayıt altına alın</h2>
+          <p>Bu ücretsiz öz değerlendirme teknik doğrulama yerine geçmez. Belirlediğiniz aksiyonların sorumlusunu ve hedef tarihini kurum içinde takip edin.</p>
+        </div>
+      </div>
+      {% endif %}
     </div>
+    {{ page_footer(loop.index + 1) }}
   </section>
+  {% endfor %}
 
-  <section class="report-cta">
-    <div>
-      <p class="report-kicker">SONRAKİ ADIM</p>
-      <h2>Daha detaylı teknik değerlendirme gerekiyor mu?</h2>
-      <p>Bu araç hızlı bir öz değerlendirmedir. Kapsamlı teknik inceleme, doğrulama ve yol haritası için Eclipta hizmetlerini inceleyebilirsiniz.</p>
-    </div>
-    <a class="button-link" href="{{ cta_url }}">{{ cta_label }}</a>
-  </section>
-
-  <footer class="report-footer">
-    <div><span class="eclipta-wordmark">eclipta</span><span class="eclipta-slogan">Sürdürülebilir BT Çözümleri</span></div>
-    <span>SiberKOBİ · Riskini bugün gör, yarını koru.</span>
-  </footer>
-
-  <div class="actions no-print">
+  <div class="actions no-print report-actions">
     <a class="secondary-link" href="{{ url_for('web.assessment') }}">Değerlendirmeyi yeniden yap</a>
-    <button type="button" data-action="print">Yazdır / PDF olarak kaydet</button>
+    <button type="button" data-action="print">Yazdır / PDF</button>
   </div>
 </div>
 {% endblock %}
