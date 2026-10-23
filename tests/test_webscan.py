@@ -41,7 +41,7 @@ def test_evaluate_headers_marks_missing_controls() -> None:
 
 
 def test_scan_web_ports_includes_database_ports(monkeypatch) -> None:
-    opened = {80, 443, 1433, 3306, 5432}
+    opened = {53, 80, 443, 1433, 2375, 3000, 3306, 3389, 5432, 6379, 9200}
 
     class FakeSocket:
         def __enter__(self):
@@ -58,8 +58,22 @@ def test_scan_web_ports_includes_database_ports(monkeypatch) -> None:
     results = scan_web_ports("example.com")
     by_port = {item.port: item for item in results}
 
+    assert by_port[53].service == "DNS"
     assert by_port[1433].service == "MSSQL"
-    assert by_port[3306].service == "MySQL"
-    assert by_port[5432].service == "PostgreSQL"
+    assert by_port[2375].service == "Docker API"
+    assert by_port[3000].service == "Grafana / Web App"
+    assert by_port[3389].service == "RDP"
+    assert by_port[6379].service == "Redis"
+    assert by_port[9200].service == "Elasticsearch"
+    assert by_port[1433].category == "Veritabanı"
+    assert by_port[3389].category == "Windows / Uzak yönetim"
     assert by_port[1433].open is True
     assert by_port[1521].open is False
+
+
+def test_free_webscan_port_set_is_bounded() -> None:
+    from app.webscan.scanner import WEB_PORTS
+
+    assert len(WEB_PORTS) == 31
+    assert 67 not in WEB_PORTS
+    assert 68 not in WEB_PORTS

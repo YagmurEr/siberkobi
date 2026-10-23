@@ -8,7 +8,12 @@ from datetime import UTC, datetime
 from http.client import HTTPConnection, HTTPSConnection
 from urllib.parse import urlsplit
 
-WEB_PORTS = (80, 443, 8080, 8443, 1433, 1521, 3306, 5432, 6379, 27017)
+WEB_PORTS = (
+    22, 53, 80, 88, 135, 139, 389, 443, 445, 464, 636,
+    1433, 1521, 2049, 2375, 2376, 3000, 3306, 3389, 5432,
+    5900, 5985, 5986, 6379, 8000, 8080, 8443, 8888, 9200,
+    11211, 27017,
+)
 SECURITY_HEADERS = {
     "strict-transport-security": "HSTS",
     "content-security-policy": "Content-Security-Policy",
@@ -28,6 +33,7 @@ class PortResult:
     port: int
     open: bool
     service: str
+    category: str
 
 
 def normalize_target(raw: str) -> str:
@@ -88,16 +94,37 @@ def resolve_public_ips(host: str) -> list[str]:
 
 def scan_web_ports(host: str, timeout: float = 1.0) -> list[PortResult]:
     services = {
-        80: "HTTP",
-        443: "HTTPS",
-        8080: "HTTP-alt",
-        8443: "HTTPS-alt",
-        1433: "MSSQL",
-        1521: "Oracle DB",
-        3306: "MySQL",
-        5432: "PostgreSQL",
-        6379: "Redis",
-        27017: "MongoDB",
+        22: ("SSH", "Uzak yönetim"),
+        53: ("DNS", "Temel altyapı"),
+        80: ("HTTP", "Web"),
+        88: ("Kerberos", "Windows / Kimlik"),
+        135: ("MS RPC", "Windows / Yönetim"),
+        139: ("NetBIOS", "Windows / Dosya paylaşımı"),
+        389: ("LDAP", "Windows / Kimlik"),
+        443: ("HTTPS", "Web"),
+        445: ("SMB", "Windows / Dosya paylaşımı"),
+        464: ("Kerberos password", "Windows / Kimlik"),
+        636: ("LDAPS", "Windows / Kimlik"),
+        1433: ("MSSQL", "Veritabanı"),
+        1521: ("Oracle DB", "Veritabanı"),
+        2049: ("NFS", "Dosya paylaşımı"),
+        2375: ("Docker API", "DevOps / Yönetim"),
+        2376: ("Docker API TLS", "DevOps / Yönetim"),
+        3000: ("Grafana / Web App", "DevOps / Web"),
+        3306: ("MySQL", "Veritabanı"),
+        3389: ("RDP", "Windows / Uzak yönetim"),
+        5432: ("PostgreSQL", "Veritabanı"),
+        5900: ("VNC", "Uzak yönetim"),
+        5985: ("WinRM HTTP", "Windows / Uzak yönetim"),
+        5986: ("WinRM HTTPS", "Windows / Uzak yönetim"),
+        6379: ("Redis", "Cache / Veri"),
+        8000: ("HTTP-alt", "Web"),
+        8080: ("HTTP-alt", "Web"),
+        8443: ("HTTPS-alt", "Web"),
+        8888: ("HTTP-alt", "Web"),
+        9200: ("Elasticsearch", "Arama / Veri"),
+        11211: ("Memcached", "Cache / Veri"),
+        27017: ("MongoDB", "Veritabanı"),
     }
     results: list[PortResult] = []
     for port in WEB_PORTS:
@@ -107,7 +134,10 @@ def scan_web_ports(host: str, timeout: float = 1.0) -> list[PortResult]:
                 opened = True
         except (OSError, TimeoutError):
             opened = False
-        results.append(PortResult(port=port, open=opened, service=services[port]))
+        service, category = services[port]
+        results.append(
+            PortResult(port=port, open=opened, service=service, category=category)
+        )
     return results
 
 
@@ -215,23 +245,39 @@ def build_findings(report: dict) -> list[dict]:
             }
         )
 
-    database_ports = {
+    sensitive_ports = {
+        135: "MS RPC",
+        139: "NetBIOS",
+        389: "LDAP",
+        445: "SMB",
+        464: "Kerberos password",
+        636: "LDAPS",
         1433: "MSSQL",
         1521: "Oracle DB",
+        2049: "NFS",
+        2375: "Docker API",
+        2376: "Docker API TLS",
         3306: "MySQL",
+        3389: "RDP",
         5432: "PostgreSQL",
+        5900: "VNC",
+        5985: "WinRM HTTP",
+        5986: "WinRM HTTPS",
         6379: "Redis",
+        9200: "Elasticsearch",
+        11211: "Memcached",
         27017: "MongoDB",
     }
-    for port, service in database_ports.items():
+    for port, service in sensitive_ports.items():
         if port in open_ports:
             findings.append(
                 {
                     "severity": "high",
                     "title": f"{service} portu internete açık görünüyor",
                     "detail": (
-                        f"{port}/TCP erişilebilir. Bu sonuç yalnız port görünürlüğünü "
-                        "gösterir; çalışan ürün/sürüm doğrulaması değildir."
+                        f"{port}/TCP erişilebilir. İnternete açık yönetim, dosya paylaşımı "
+                        "veya veri servisleri erişim kontrolü açısından gözden geçirilmelidir. "
+                        "Bu sonuç ürün/sürüm doğrulaması değildir."
                     ),
                 }
             )

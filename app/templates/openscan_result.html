@@ -38,11 +38,12 @@
     <div class="report-section-title"><span>02</span><h2>Port ve servis görünürlüğü</h2></div>
     <div class="scan-table-wrap">
       <table class="scan-table report-table">
-        <thead><tr><th>Port</th><th>Beklenen servis</th><th>Durum</th></tr></thead>
+        <thead><tr><th>Port</th><th>Kategori</th><th>Beklenen servis</th><th>Durum</th></tr></thead>
         <tbody>
         {% for item in report.ports %}
           <tr class="{{ 'row-open' if item.open else '' }}">
             <td>{{ item.port }}</td>
+            <td>{{ item.category }}</td>
             <td>{{ item.service }}</td>
             <td><span class="report-status {{ 'is-open' if item.open else 'is-closed' }}">{{ "Açık" if item.open else "Kapalı / ulaşılamadı" }}</span></td>
           </tr>
@@ -50,7 +51,11 @@
         </tbody>
       </table>
     </div>
-    <p class="report-note">Port adı, çalışan ürünün kesin doğrulaması değildir; yalnızca yaygın servis eşlemesidir.</p>
+    <p class="report-note">
+      Bu kontrol 31 sabit TCP portuyla sınırlıdır. Port adı çalışan ürünün kesin
+      doğrulaması değildir; yalnızca yaygın servis eşlemesidir. DHCP 67/68 UDP
+      olduğu için bu TCP görünürlük kontrolüne dahil edilmez.
+    </p>
   </section>
 
   <section class="report-section">
