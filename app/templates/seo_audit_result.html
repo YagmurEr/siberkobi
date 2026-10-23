@@ -1,7 +1,9 @@
 {% extends "base.html" %}
-{% block title %}SiberKOBİ · SEO Analiz Sonucu{% endblock %}
+{% block title %}SiberKOBİ · SEO Analiz Sonucu</div>
+{% endblock %}
 {% block content %}
-<section class="hero">
+<div class="tool-page tool-page--wide">
+<section class="hero tool-hero">
   <p class="eyebrow">SEO Analiz Sonucu</p>
   <h1>{{ report.final_url }}</h1>
   <p class="lead">Temel teknik SEO ve taranabilirlik kontrolü tamamlandı.</p>
@@ -97,6 +99,29 @@
   </div>
   {% else %}
   <p class="module-status-card">Kontrol edilecek aynı-host bağlantı örneği bulunamadı.</p>
+  {% endif %}
+</section>
+
+<section class="scan-section">
+  <h2>Önerilen aksiyonlar</h2>
+  {% if report.findings %}
+  <div class="recommendation-list">
+    {% for finding in report.findings %}
+    <article class="recommendation-item">
+      <span class="recommendation-index">{{ loop.index }}</span>
+      <div>
+        <strong>{{ finding.title }}</strong>
+        <p>{{ finding.detail }}</p>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  <p class="muted">
+    Önce HIGH, sonra MEDIUM, ardından INFO seviyesindeki maddeleri ele alın.
+    Bu liste mevcut tarama bulgularından deterministik olarak üretilir.
+  </p>
+  {% else %}
+  <p class="module-status-card">Bu temel kontrolde öncelikli bir SEO aksiyonu oluşmadı.</p>
   {% endif %}
 </section>
 
