@@ -35,6 +35,8 @@ def test_seo_renders_report(monkeypatch) -> None:
         "canonical": "https://example.com/",
         "viewport": "width=device-width",
         "robots_meta": "index,follow",
+        "robots_meta_status": "Özel robots direktifi tanımlı",
+        "analytics": {"detected": True, "status": "Google Analytics / Tag Manager etiketi tespit edildi"},
         "robots": {"ok": True, "status": 200},
         "sitemap": {"ok": True, "status": 200},
         "og": {"title": "OG", "description": "OG desc"},
