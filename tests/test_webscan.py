@@ -7,6 +7,7 @@ from app.webscan.scanner import (
     evaluate_headers,
     normalize_target,
     resolve_public_ips,
+    scan_web_ports,
 )
 
 
@@ -37,3 +38,28 @@ def test_evaluate_headers_marks_missing_controls() -> None:
 
     assert by_name["X-Content-Type-Options"]["present"] is True
     assert by_name["Content-Security-Policy"]["present"] is False
+
+
+def test_scan_web_ports_includes_database_ports(monkeypatch) -> None:
+    opened = {80, 443, 1433, 3306, 5432}
+
+    class FakeSocket:
+        def __enter__(self):
+            return self
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+    def fake_connection(address, timeout):
+        if address[1] in opened:
+            return FakeSocket()
+        raise OSError("closed")
+
+    monkeypatch.setattr(socket, "create_connection", fake_connection)
+    results = scan_web_ports("example.com")
+    by_port = {item.port: item for item in results}
+
+    assert by_port[1433].service == "MSSQL"
+    assert by_port[3306].service == "MySQL"
+    assert by_port[5432].service == "PostgreSQL"
+    assert by_port[1433].open is True
+    assert by_port[1521].open is False
