@@ -49,7 +49,7 @@
     <div class="report-findings">
       {% for finding in findings %}
         <article class="report-finding">
-          <span class="severity {{ 'severity--high' if finding.response == 'hayir' else 'severity--medium' }}">{{ 'HAYIR' if finding.response == 'hayir' else 'KISMEN' }}</span>
+          <span class="severity {{ 'severity--high' if finding.response == 'hayir' else 'severity--medium' }}">{{ 'Hayır' if finding.response == 'hayir' else 'Kısmen' }}</span>
           <div><strong><span class="qid">{{ finding.id }}</span> {{ finding.text }}</strong></div>
         </article>
       {% else %}
