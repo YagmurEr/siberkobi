@@ -1,124 +1,158 @@
 {% extends "base.html" %}
+{% from "_report_macros.html" import page_header, page_footer %}
 {% block title %}SiberKOBİ · SEO Analiz Sonucu{% endblock %}
 {% block content %}
-<div class="report-shell">
-  <header class="report-header">
-    <img class="report-logo" src="{{ url_for('static', filename='siberkobi-logo.svg') }}" alt="SiberKOBİ">
-    <div>
-      <p class="report-kicker">SEO ANALİZ RAPORU</p>
-      <h1>{{ report.final_url }}</h1>
-      <p>Teknik SEO, taranabilirlik ve sayfa işaretleme değerlendirmesi</p>
-    </div>
-  </header>
+<div class="report-book">
+  <section class="report-sheet">
+    {{ page_header("SEO Analiz Raporu", report.final_url, 1) }}
+    <div class="report-page-content">
+      <p class="report-kicker">TEKNİK SEO ÖZETİ</p>
+      <h1 class="report-title">{{ report.final_url }}</h1>
+      <p class="report-intro">Girilen URL ve sınırlı iç sayfa örneklemi üzerinde teknik SEO görünürlüğü.</p>
 
-  <section class="report-summary-grid report-summary-grid--four">
-    <article class="report-metric"><span>Toplam bulgu</span><strong>{{ report.summary.findings_total }}</strong></article>
-    <article class="report-metric report-metric--risk"><span>Yüksek</span><strong>{{ report.summary.high }}</strong></article>
-    <article class="report-metric"><span>Kırık link</span><strong>{{ report.summary.broken_links }}</strong></article>
-    <article class="report-metric"><span>Yanıt süresi</span><strong>{{ report.elapsed_ms }}<small> ms</small></strong></article>
-  </section>
+      <div class="report-summary-grid report-summary-grid--four compact">
+        <article class="report-metric"><span>Toplam bulgu</span><strong>{{ report.summary.findings_total }}</strong></article>
+        <article class="report-metric report-metric--risk"><span>Yüksek</span><strong>{{ report.summary.high }}</strong></article>
+        <article class="report-metric"><span>Kırık link</span><strong>{{ report.summary.broken_links }}</strong></article>
+        <article class="report-metric"><span>Yanıt</span><strong>{{ report.elapsed_ms }}<small> ms</small></strong></article>
+      </div>
 
-  <section class="report-section">
-    <div class="report-section-title"><span>01</span><h2>Önerilen aksiyonlar</h2></div>
-    {% if report.findings %}
-    <div class="report-action-list">
-      {% for finding in report.findings %}
-      <article class="report-action">
-        <span class="action-number">{{ loop.index }}</span>
-        <div class="seo-guidance">
-          <strong>{{ finding.title }}</strong>
-          <p>{{ finding.detail }}</p>
-          {% if finding.why %}
-          <div class="guidance-row"><span>Neden önemli?</span><p>{{ finding.why }}</p></div>
-          {% endif %}
-          {% if finding.fix %}
-          <div class="guidance-row"><span>Nasıl düzeltilir?</span><p>{{ finding.fix }}</p></div>
-          {% endif %}
+      <div class="report-section compact-section">
+        <div class="report-section-title"><span>01</span><h2>Sayfa temelleri</h2></div>
+        <div class="scan-table-wrap flat">
+          <table class="scan-table report-table compact-table"><tbody>
+            <tr><th>HTTP</th><td>{{ report.status }}</td></tr>
+            <tr><th>Title</th><td>{{ report.title or "Yok" }} <span class="muted">({{ report.title_length }} karakter)</span></td></tr>
+            <tr><th>Meta description</th><td>{{ report.description or "Yok" }} <span class="muted">({{ report.description_length }} karakter)</span></td></tr>
+            <tr><th>Canonical</th><td>{{ report.canonical or "Yok" }}</td></tr>
+            <tr><th>Viewport</th><td>{{ report.viewport or "Yok" }}</td></tr>
+          </tbody></table>
         </div>
-        <span class="severity severity--{{ finding.severity }}">{{ finding.severity | upper }}</span>
-      </article>
-      {% endfor %}
+      </div>
+
+      <div class="report-section compact-section">
+        <div class="report-section-title"><span>02</span><h2>Google Analytics / Tag Manager</h2></div>
+        <p><strong>{{ report.analytics.status }}</strong></p>
+        {% if report.analytics.ga4_ids %}<p>GA4 Measurement ID: {{ report.analytics.ga4_ids | join(", ") }}</p>{% endif %}
+        {% if report.analytics.gtm_ids %}<p>GTM Container: {{ report.analytics.gtm_ids | join(", ") }}</p>{% endif %}
+        <p class="report-note">{{ report.analytics.scope_note }}</p>
+      </div>
     </div>
-    {% else %}
-    <div class="report-panel"><p>Bu temel kontrolde öncelikli bir SEO aksiyonu oluşmadı.</p></div>
-    {% endif %}
+    {{ page_footer(1) }}
   </section>
 
-  <section class="report-section">
-    <div class="report-section-title"><span>02</span><h2>Sayfa temelleri</h2></div>
-    <div class="scan-table-wrap">
-      <table class="scan-table report-table">
-        <tbody>
-          <tr><th>HTTP durum</th><td>{{ report.status }}</td></tr>
-          <tr><th>Title</th><td>{{ report.title or "Yok" }} <span class="muted">({{ report.title_length }} karakter)</span></td></tr>
-          <tr><th>Meta description</th><td>{{ report.description or "Yok" }} <span class="muted">({{ report.description_length }} karakter)</span></td></tr>
-          <tr><th>H1 / H2</th><td>{{ report.headings.h1 | length }} / {{ report.headings.h2 | length }}</td></tr>
-          <tr><th>Canonical</th><td>{{ report.canonical or "Yok" }}</td></tr>
-          <tr><th>Viewport</th><td>{{ report.viewport or "Yok" }}</td></tr>
-        </tbody>
-      </table>
+  <section class="report-sheet">
+    {{ page_header("SEO Analiz Raporu", report.final_url, 2) }}
+    <div class="report-page-content">
+      <div class="report-section-title page-heading"><span>03</span><h2>H1 sayfa örneklemi</h2></div>
+      <p class="report-note">Ücretsiz analiz, girilen sayfa ile birlikte aynı host üzerindeki en fazla {{ report.page_structure | length }} sayfayı örnekler.</p>
+      <div class="scan-table-wrap flat">
+        <table class="scan-table report-table">
+          <thead><tr><th>Sayfa</th><th>H1</th><th>Bulunan başlıklar</th></tr></thead>
+          <tbody>
+          {% for item in report.page_structure %}
+            <tr class="{{ 'row-open' if item.h1_count != 1 else '' }}">
+              <td class="url-cell">{{ item.url }}</td>
+              <td>{{ item.h1_count if item.h1_count is not none else "Hata" }}</td>
+              <td>{{ item.h1 | join(" · ") if item.h1 else "—" }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="report-section compact-section">
+        <div class="report-section-title"><span>04</span><h2>Tarama ve indeksleme</h2></div>
+        <div class="key-value-grid">
+          <div><span>robots.txt</span><strong>{{ "Erişilebilir" if report.robots.ok else "Erişilemiyor" }}</strong></div>
+          <div><span>sitemap.xml</span><strong>{{ "Erişilebilir" if report.sitemap.ok else "Erişilemiyor" }}</strong></div>
+          <div><span>Meta robots</span><strong>{{ report.robots_meta_status }}</strong></div>
+          <div><span>Meta robots değeri</span><strong>{{ report.robots_meta or "Özel direktif yok" }}</strong></div>
+        </div>
+      </div>
     </div>
+    {{ page_footer(2) }}
   </section>
 
-  <section class="report-section">
-    <div class="report-section-title"><span>03</span><h2>Tarama ve indeksleme</h2></div>
-    <div class="report-three-col">
-      <article class="report-panel"><h3>robots.txt</h3><strong>{{ "Erişilebilir" if report.robots.ok else "Erişilemiyor" }}</strong>{% if report.robots.status %}<p>HTTP {{ report.robots.status }}</p>{% endif %}</article>
-      <article class="report-panel"><h3>sitemap.xml</h3><strong>{{ "Erişilebilir" if report.sitemap.ok else "Erişilemiyor" }}</strong>{% if report.sitemap.status %}<p>HTTP {{ report.sitemap.status }}</p>{% endif %}</article>
-      <article class="report-panel">
-        <h3>Meta robots</h3>
-        <strong>{{ report.robots_meta_status }}</strong>
-        {% if report.robots_meta %}<p>{{ report.robots_meta }}</p>{% else %}<p class="muted">Özel noindex/nofollow ihtiyacı yoksa ayrıca tanımlamak zorunlu değildir.</p>{% endif %}
-      </article>
-    </div>
-  </section>
-
-  <section class="report-section">
-    <div class="report-section-title"><span>04</span><h2>Ölçüm, sosyal ve yapılandırılmış veri</h2></div>
-    <div class="report-panel" style="margin-bottom:14px">
-      <h3>Google Analytics / Tag Manager</h3>
-      <strong>{{ report.analytics.status }}</strong>
-      {% if not report.analytics.detected %}
-      <p class="muted">Bu doğrudan SEO hatası değildir. Ölçüm gerekiyorsa GA4 veya Google Tag Manager kurulumu değerlendirilmelidir.</p>
+  <section class="report-sheet">
+    {{ page_header("SEO Analiz Raporu", report.final_url, 3) }}
+    <div class="report-page-content">
+      <div class="report-section-title page-heading"><span>05</span><h2>Deterministik öneriler · I</h2></div>
+      {% if report.findings %}
+      <div class="report-action-list detailed-actions">
+        {% for finding in report.findings[:6] %}
+        <article class="report-action">
+          <span class="severity severity--{{ finding.severity }}">{{ finding.severity | upper }}</span>
+          <div class="seo-guidance">
+            <strong>{{ finding.title }}</strong>
+            <p class="finding-location"><b>Sayfa:</b> {{ finding.page }}</p>
+            <p>{{ finding.detail }}</p>
+            <div class="guidance-row"><span>Neden önemli?</span><p>{{ finding.why }}</p></div>
+            <div class="guidance-row"><span>Nasıl düzeltilir?</span><p>{{ finding.fix }}</p></div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="report-note">Öncelikli teknik SEO bulgusu oluşmadı.</p>
       {% endif %}
     </div>
-    <div class="scan-table-wrap">
-      <table class="scan-table report-table">
-        <tbody>
-          <tr><th>Open Graph title</th><td>{{ report.og.title or "Yok" }}</td></tr>
-          <tr><th>Open Graph description</th><td>{{ report.og.description or "Yok" }}</td></tr>
-          <tr><th>Twitter/X card</th><td>{{ report.twitter_card or "Yok" }}</td></tr>
-          <tr><th>JSON-LD</th><td>{{ report.json_ld_count }} blok</td></tr>
-          <tr><th>Görseller</th><td>{{ report.images_total }} toplam · {{ report.images_missing_alt }} alt metni eksik</td></tr>
-        </tbody>
-      </table>
-    </div>
+    {{ page_footer(3) }}
   </section>
 
-  <section class="report-section">
-    <div class="report-section-title"><span>05</span><h2>İç bağlantı örneklemi</h2></div>
-    {% if report.links_checked %}
-    <div class="scan-table-wrap">
-      <table class="scan-table report-table">
-        <thead><tr><th>URL</th><th>Durum</th></tr></thead>
-        <tbody>
-        {% for item in report.links_checked %}
-          <tr><td class="url-cell">{{ item.url }}</td><td>{{ item.status if item.status is not none else "Hata" }}</td></tr>
+  <section class="report-sheet">
+    {{ page_header("SEO Analiz Raporu", report.final_url, 4) }}
+    <div class="report-page-content">
+      <div class="report-section-title page-heading"><span>06</span><h2>Deterministik öneriler · II</h2></div>
+      {% if report.findings[6:] %}
+      <div class="report-action-list detailed-actions">
+        {% for finding in report.findings[6:] %}
+        <article class="report-action">
+          <span class="severity severity--{{ finding.severity }}">{{ finding.severity | upper }}</span>
+          <div class="seo-guidance">
+            <strong>{{ finding.title }}</strong>
+            <p class="finding-location"><b>Sayfa:</b> {{ finding.page }}</p>
+            <p>{{ finding.detail }}</p>
+            <div class="guidance-row"><span>Neden önemli?</span><p>{{ finding.why }}</p></div>
+            <div class="guidance-row"><span>Nasıl düzeltilir?</span><p>{{ finding.fix }}</p></div>
+          </div>
+        </article>
         {% endfor %}
-        </tbody>
-      </table>
+      </div>
+      {% else %}
+      <p class="report-note">Ek öneri bulunmuyor.</p>
+      {% endif %}
     </div>
-    {% else %}
-    <div class="report-panel"><p>Kontrol edilecek aynı-host bağlantı örneği bulunamadı.</p></div>
-    {% endif %}
+    {{ page_footer(4) }}
   </section>
 
-  <footer class="report-footer">
-    <div><span class="eclipta-wordmark">eclipta</span><span class="eclipta-slogan">Sürdürülebilir BT Çözümleri</span></div>
-    <span>SiberKOBİ · Riskini bugün gör, yarını koru.</span>
-  </footer>
+  <section class="report-sheet">
+    {{ page_header("SEO Analiz Raporu", report.final_url, 5) }}
+    <div class="report-page-content">
+      <div class="report-section-title page-heading"><span>07</span><h2>Sosyal, yapılandırılmış veri ve iç linkler</h2></div>
+      <div class="key-value-grid">
+        <div><span>Open Graph title</span><strong>{{ report.og.title or "Yok" }}</strong></div>
+        <div><span>Twitter/X card</span><strong>{{ report.twitter_card or "Yok" }}</strong></div>
+        <div><span>JSON-LD</span><strong>{{ report.json_ld_count }} blok</strong></div>
+        <div><span>Alt metni eksik görsel</span><strong>{{ report.images_missing_alt }} / {{ report.images_total }}</strong></div>
+      </div>
+      <div class="scan-table-wrap flat top-gap">
+        <table class="scan-table report-table dense-table">
+          <thead><tr><th>Kontrol edilen iç bağlantı</th><th>Durum</th></tr></thead>
+          <tbody>
+          {% for item in report.links_checked %}
+            <tr><td class="url-cell">{{ item.url }}</td><td>{{ item.status if item.status is not none else "Hata" }}</td></tr>
+          {% else %}
+            <tr><td colspan="2">Kontrol edilecek aynı-host bağlantı örneği bulunamadı.</td></tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {{ page_footer(5) }}
+  </section>
 
-  <div class="actions no-print">
+  <div class="actions no-print report-actions">
     <a class="button-link" href="{{ url_for('web.web_seo_audit') }}">Yeni SEO Analizi</a>
     <button type="button" data-action="print">Yazdır / PDF</button>
   </div>
