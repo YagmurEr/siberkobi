@@ -7,14 +7,14 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
   <script src="{{ url_for('static', filename='app.js') }}" defer></script>
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
   <header class="site-header">
     <div class="container header-inner">
       <a class="brand brand-logo-link" href="{{ url_for('web.index') }}" aria-label="SiberKOBİ ana sayfa">
         <img class="site-logo" src="{{ url_for('static', filename='siberkobi-logo.svg') }}" alt="SiberKOBİ — Riskini bugün gör, yarını koru.">
       </a>
       <nav class="main-nav" aria-label="Ana menü">
-        <a href="{{ url_for('web.index') }}" class="nav-link-active">Ana Sayfa</a>
+        <a href="{{ url_for('web.index') }}">Ana Sayfa</a>
         <a href="https://eclipta.tr">Hakkında</a>
       </nav>
     </div>
@@ -26,7 +26,7 @@
 
   <footer class="site-footer">
     <div class="container footer-inner">
-      <a href="https://kobi.eclipta.tr/paketler">KOBİ'lere Özel</a>
+      <a class="footer-packages" href="https://kobi.eclipta.tr/paketler">KOBİ'lere Özel Paketler <span>→</span></a>
       <a class="eclipta-signature" href="https://eclipta.tr" aria-label="Eclipta">
         <span class="eclipta-wordmark">eclipta</span>
         <span class="eclipta-slogan">Sürdürülebilir BT Çözümleri</span>
