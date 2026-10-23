@@ -1322,3 +1322,10 @@ body {
   .home-tool-card, .modern-form, .assessment-category { padding: 20px; }
   .tool-shell { padding-top: 36px; }
 }
+
+.home-tools--compact {
+  padding-top: 42px;
+}
+.home-tools--compact .section-heading-row {
+  margin-top: 0;
+}
