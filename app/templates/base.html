@@ -10,11 +10,9 @@
 <body class="{% block body_class %}{% endblock %}">
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand brand-logo-link brand-stack" href="{{ url_for('web.index') }}" aria-label="SiberKOBİ ana sayfa">
-        <span class="brand-logo-crop">
-          <img class="site-logo" src="{{ url_for('static', filename='siberkobi-logo.svg') }}" alt="SiberKOBİ">
-        </span>
-        <span class="brand-slogan">Riskini bugün gör, yarını koru.</span>
+      <a class="brand brand-logo-link brand-stack brand-stack--approved" href="{{ url_for('web.index') }}" aria-label="SiberKOBİ ana sayfa">
+        <img class="site-logo site-logo--approved" src="{{ url_for('static', filename='siberkobi-logo-approved.svg') }}" alt="SiberKOBİ">
+        <img class="site-slogan site-slogan--approved" src="{{ url_for('static', filename='siberkobi-slogan-approved.svg') }}" alt="Riskini bugün gör, yarını koru.">
       </a>
       <nav class="main-nav" aria-label="Ana menü">
         <a href="{{ url_for('web.index') }}">Ana Sayfa</a>

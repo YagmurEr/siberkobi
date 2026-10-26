@@ -1917,3 +1917,43 @@ body {
 .legal-copy p:last-child {
   margin-bottom: 0;
 }
+
+/* Approved SiberKOBİ lockup — exact source artwork, no redraw */
+.brand-stack--approved {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+.brand-stack--approved .site-logo--approved {
+  display: block;
+  width: 220px !important;
+  height: auto !important;
+  margin: 0;
+  transform: none !important;
+}
+.brand-stack--approved .site-slogan--approved {
+  display: block;
+  width: 172px;
+  height: auto;
+  margin: -2px 0 0 24px;
+}
+.brand-stack--approved .brand-logo-crop,
+.brand-stack--approved .brand-slogan {
+  display: none !important;
+}
+.header-inner {
+  min-height: 132px !important;
+}
+@media (max-width: 640px) {
+  .brand-stack--approved .site-logo--approved {
+    width: 180px !important;
+  }
+  .brand-stack--approved .site-slogan--approved {
+    width: 142px;
+    margin-left: 19px;
+  }
+  .header-inner {
+    min-height: 112px !important;
+  }
+}
