@@ -100,11 +100,11 @@
     {{ page_footer(3) }}
   </section>
 
+  {% if report.findings[6:] %}
   <section class="report-sheet">
     {{ page_header("SEO Analiz Raporu", report.final_url, 4) }}
     <div class="report-page-content">
       <div class="report-section-title page-heading"><span>06</span><h2>Deterministik öneriler · II</h2></div>
-      {% if report.findings[6:] %}
       <div class="report-action-list detailed-actions">
         {% for finding in report.findings[6:] %}
         <article class="report-action">
@@ -119,15 +119,13 @@
         </article>
         {% endfor %}
       </div>
-      {% else %}
-      <p class="report-note">Ek öneri bulunmuyor.</p>
-      {% endif %}
     </div>
     {{ page_footer(4) }}
   </section>
+  {% endif %}
 
   <section class="report-sheet">
-    {{ page_header("SEO Analiz Raporu", report.final_url, 5) }}
+    {{ page_header("SEO Analiz Raporu", report.final_url, 5 if report.findings[6:] else 4) }}
     <div class="report-page-content">
       <div class="report-section-title page-heading"><span>07</span><h2>Sosyal, yapılandırılmış veri ve iç linkler</h2></div>
       <div class="key-value-grid">
@@ -149,7 +147,7 @@
         </table>
       </div>
     </div>
-    {{ page_footer(5) }}
+    {{ page_footer(5 if report.findings[6:] else 4) }}
   </section>
 
   <div class="actions no-print report-actions">
