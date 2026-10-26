@@ -133,8 +133,8 @@ def test_legal_notice_page_and_home_link() -> None:
     legal = client.get("/yasal-uyari")
     assert legal.status_code == 200
     body = legal.get_data(as_text=True)
-    assert "Bilgilendirme ve Sorumluluk Sınırı" in body
-    assert "Eclipta'nın yürürlükteki mevzuat uyarınca" in body
+    assert "Kullanıcının Sorumluluğu ve Sonuçların Doğrulanması" in body
+    assert "kendi sorumluluğu altında kullandığını" in body
 
     home = client.get("/")
     assert home.status_code == 200
