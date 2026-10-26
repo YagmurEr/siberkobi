@@ -1,13 +1,13 @@
 # SiberKOBİ — Yasal Uyarı
 
-## Bilgilendirme ve Sorumluluk Sınırı
+## Kullanıcının Sorumluluğu ve Sonuçların Doğrulanması
 
-Bu rapor, kullanıcı tarafından sağlanan bilgiler ve yanıtlar ile SiberKOBİ tarafından gerçekleştirilen sınırlı ve otomatik teknik kontroller esas alınarak oluşturulan genel nitelikte bir değerlendirmedir.
+Kullanıcı, SiberKOBİ uygulamasını kendi sorumluluğu altında kullandığını; uygulama aracılığıyla gerçekleştirdiği işlemlerin, başlattığı analizlerin ve bu işlemler sonucunda elde ettiği bulgu, değerlendirme, öneri ve diğer çıktıların kullanım amacına uygunluğunu kontrol etmek ve doğrulamakla yükümlü olduğunu kabul eder.
 
-Raporda yer alan bulgu, değerlendirme ve öneriler; kurumun tüm teknik, operasyonel, hukuki, mevzuata uyum veya bilgi güvenliği risklerinin eksiksiz olarak tespit edildiği anlamına gelmez. Rapor; profesyonel danışmanlık, bağımsız denetim, sızma testi, hukuki görüş veya belirli bir güvenlik seviyesine ilişkin garanti niteliği taşımaz.
+SiberKOBİ tarafından sunulan sonuçlar; analiz anında erişilebilen veriler, kullanıcı tarafından sağlanan bilgiler ve uygulamanın teknik kapsamı çerçevesinde otomatik olarak oluşturulur. Bu nedenle söz konusu sonuçlar kesin, eksiksiz, hatasız veya belirli bir amaca uygun bilgi niteliğinde değildir.
 
-Raporda sunulan önerilerin uygulanmasına ilişkin kararlar; kurumun altyapısı, iş süreçleri, risk profili, mevcut güvenlik kontrolleri ve ilgili mevzuat dikkate alınarak kurum tarafından değerlendirilmelidir. Gerektiğinde ilgili alanda yetkin teknik veya hukuki uzmanlardan profesyonel değerlendirme alınması önerilir.
+Kullanıcı, uygulama tarafından üretilen herhangi bir bulgu, öneri veya değerlendirmeye dayanarak işlem yapmadan önce gerekli teknik, operasyonel ve gerektiğinde hukuki kontrolleri yapmakla yükümlüdür. Uygulama çıktılarının doğrulanmadan uygulanmasından, yorumlanmasından veya üçüncü kişilerle paylaşılmasından doğabilecek sonuçların değerlendirilmesi ve yönetilmesi kullanıcıya aittir.
 
-SiberKOBİ tarafından üretilen sonuçlar, değerlendirme anında erişilebilen bilgiler ve aracın teknik kapsamı ile sınırlıdır. Bir riskin, güvenlik açığının veya uyumsuzluğun raporda yer almaması, söz konusu riskin bulunmadığı veya sistemin tamamen güvenli olduğu anlamına gelmez.
+Kullanıcı ayrıca, SiberKOBİ üzerinden yalnızca üzerinde işlem yapmaya, analiz gerçekleştirmeye veya değerlendirme yürütmeye yetkili olduğu sistem, alan adı, altyapı ve veriler üzerinde işlem gerçekleştireceğini kabul eder. Yetkisiz kullanım, üçüncü kişilere ait sistemler üzerinde izinsiz işlem yapılması veya uygulamanın amacı dışında kullanılması tamamen kullanıcının sorumluluğundadır.
 
-Eclipta, ayrıca yazılı olarak üstlenilmiş bir hizmet veya taahhüt bulunmadıkça, bu otomatik raporun belirli bir amaca uygunluğu, tüm riskleri tespit edeceği veya önerilerin uygulanması sonucunda belirli bir güvenlik ya da uyum seviyesine ulaşılacağı konusunda garanti veya taahhütte bulunmaz. Eclipta'nın yürürlükteki mevzuat uyarınca sınırlandırılması veya kaldırılması mümkün olmayan sorumlulukları saklıdır.
+Kullanıcı, uygulamayı kullanmaya devam etmekle, SiberKOBİ tarafından sağlanan çıktıların profesyonel danışmanlık, bağımsız denetim, sızma testi, hukuki görüş veya kesin bir güvenlik değerlendirmesi yerine geçmediğini bildiğini ve bu kapsamı kabul ettiğini beyan eder.
