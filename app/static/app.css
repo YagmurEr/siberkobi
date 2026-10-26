@@ -1735,3 +1735,127 @@ body {
     break-inside: avoid;
   }
 }
+
+
+/* Brand lockup: logo and slogan separated */
+.brand-stack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+.brand-logo-crop {
+  display: block;
+  width: 292px;
+  height: 104px;
+  overflow: hidden;
+}
+.brand-logo-crop .site-logo {
+  width: 292px !important;
+  height: auto !important;
+  display: block;
+  transform: translateY(-4px);
+}
+.brand-slogan {
+  margin: -5px 0 0 48px;
+  color: #64748b;
+  font-size: .92rem;
+  font-weight: 600;
+  letter-spacing: .01em;
+}
+.header-inner {
+  min-height: 124px !important;
+}
+
+/* SEO: do not render an empty second recommendation page */
+.report-sheet:has(.detailed-actions:empty) {
+  display: none;
+}
+
+/* Assessment continuous report flow */
+.assessment-summary-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+.assessment-flow-section {
+  margin-top: 20px;
+  padding-top: 2px;
+}
+.assessment-flow-section + .assessment-flow-section {
+  margin-top: 22px;
+}
+.assessment-flow-section .page-heading {
+  margin-bottom: 12px;
+}
+.report-sheet--flow {
+  min-height: 0;
+  padding-bottom: 86px;
+}
+.report-sheet--flow .report-page-footer {
+  position: static;
+  margin-top: 28px;
+}
+.assessment-report-sheet .report-page-content {
+  padding-bottom: 0;
+}
+
+@media (max-width: 720px) {
+  .brand-logo-crop {
+    width: 224px;
+    height: 82px;
+  }
+  .brand-logo-crop .site-logo {
+    width: 224px !important;
+  }
+  .brand-slogan {
+    margin-left: 36px;
+    font-size: .8rem;
+  }
+  .header-inner {
+    min-height: 104px !important;
+  }
+  .assessment-summary-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media print {
+  .assessment-report-book .report-sheet--flow {
+    width: auto;
+    min-height: 0;
+    margin: 0;
+    padding: 18mm 14mm 18mm;
+    page-break-after: auto;
+    break-after: auto;
+  }
+  .assessment-report-book .report-page-header {
+    position: fixed;
+    top: 5mm;
+    left: 14mm;
+    right: 14mm;
+    background: #fff;
+    z-index: 2;
+  }
+  .assessment-report-book .report-page-footer {
+    position: fixed;
+    left: 14mm;
+    right: 14mm;
+    bottom: 5mm;
+    margin: 0;
+    background: #fff;
+    z-index: 2;
+  }
+  .assessment-report-book .report-page-content {
+    padding-top: 10mm;
+  }
+  .assessment-flow-section {
+    break-inside: auto;
+  }
+  .assessment-flow-section .report-section-title {
+    break-after: avoid;
+  }
+  .assessment-action-card,
+  .report-positive,
+  .report-domain {
+    break-inside: avoid;
+  }
+}
