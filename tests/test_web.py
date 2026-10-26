@@ -125,3 +125,20 @@ def test_identity_answers_are_grouped_into_one_access_review_action() -> None:
     body = response.get_data(as_text=True)
     assert body.count("Kullanıcı ve ayrıcalıklı hesapları üç ayda bir gözden geçirin") == 1
     assert "SK-T06 · SK-T07 · SK-T08 · SK-T09" in body
+
+
+def test_legal_notice_page_and_home_link() -> None:
+    client = create_app().test_client()
+
+    legal = client.get("/yasal-uyari")
+    assert legal.status_code == 200
+    body = legal.get_data(as_text=True)
+    assert "Bilgilendirme ve Sorumluluk Sınırı" in body
+    assert "Eclipta'nın yürürlükteki mevzuat uyarınca" in body
+
+    home = client.get("/")
+    assert home.status_code == 200
+    home_body = home.get_data(as_text=True)
+    assert "Bilgilendirme Notu" in home_body
+    assert "Devamı için Yasal Uyarı" in home_body
+    assert 'href="/yasal-uyari"' in home_body
