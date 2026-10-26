@@ -17,6 +17,11 @@ def index():
     return render_template("index.html")
 
 
+@web_bp.get("/yasal-uyari")
+def legal_notice():
+    return render_template("legal_notice.html")
+
+
 @web_bp.get("/assessment")
 def assessment():
     data = load_assessment()
