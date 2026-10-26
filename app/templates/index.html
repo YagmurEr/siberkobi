@@ -79,6 +79,12 @@
         <a class="tool-cta" href="{{ url_for('web.assessment') }}">Ankete Başla <span>→</span></a>
       </article>
     </div>
+
+    <aside class="home-legal-note" aria-labelledby="home-legal-title">
+      <h3 id="home-legal-title">Bilgilendirme Notu</h3>
+      <p>Bu rapor, kullanıcı tarafından sağlanan bilgiler ve yanıtlar ile SiberKOBİ tarafından gerçekleştirilen sınırlı ve otomatik teknik kontroller esas alınarak oluşturulan genel nitelikte bir değerlendirmedir.</p>
+      <a href="{{ url_for('web.legal_notice') }}">Devamı için Yasal Uyarı <span>→</span></a>
+    </aside>
   </div>
 </section>
 {% endblock %}
