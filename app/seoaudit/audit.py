@@ -114,6 +114,10 @@ GUIDANCE = {
         "why": "Açık başlık hiyerarşisi, yeterli metin paragrafları ve semantik HTML yapısı içeriğin makineler tarafından daha güvenilir biçimde ayrıştırılmasına yardımcı olur.",
         "fix": "Tek bir ana H1, açıklayıcı H2 başlıkları, anlamlı metin paragrafları ve mümkün olduğunda main/article/section gibi semantik HTML öğeleri kullanın.",
     },
+    "llms.txt bulunamadı": {
+        "why": "llms.txt, LLM'lere site hakkında kısa bağlam ve yararlı içerik bağlantıları sunmayı amaçlayan öneri niteliğinde bir konvansiyondur; zorunlu bir SEO veya web standardı değildir.",
+        "fix": "AI sistemleri için açık bir içerik rehberi sunmak istiyorsanız site kökünde /llms.txt oluşturmayı değerlendirin. Dosyada kısa site açıklaması ve önemli kaynaklara bağlantılar verin; mevcut robots.txt ve erişim politikalarının yerini almadığını unutmayın.",
+    },
 }
 
 
@@ -438,6 +442,7 @@ def run_seo_audit(raw_target: str) -> dict:
 
     robots = _fetch_optional(final_url, "/robots.txt")
     sitemap = _fetch_optional(final_url, "/sitemap.xml")
+    llms_txt = _fetch_optional(final_url, "/llms.txt")
     links = _check_links(final_url, parser.links)
     page_structure = _inspect_page_structure(final_url, parser.links)
     ai_visibility = evaluate_ai_visibility(
@@ -447,6 +452,7 @@ def run_seo_audit(raw_target: str) -> dict:
         h2_count=len(parser.headings["h2"]),
         paragraph_count=parser.paragraph_count,
         semantic_tags=sorted(parser.semantic_tags),
+        llms_txt=llms_txt,
     )
 
     findings: list[dict] = []
@@ -560,6 +566,15 @@ def run_seo_audit(raw_target: str) -> dict:
                         f"robots.txt kök yolunda {bot} için erişim engelli görünüyor.",
                     )
                 )
+
+    if not ai_visibility["llms_txt"]["present"]:
+        findings.append(
+            _finding(
+                "info",
+                "llms.txt bulunamadı",
+                "Site kökünde içerik barındıran erişilebilir bir /llms.txt dosyası tespit edilmedi.",
+            )
+        )
 
     if not ai_visibility["content"]["readable"] or not ai_visibility["checks"]["semantic_structure"]:
         findings.append(
@@ -680,6 +695,7 @@ def run_seo_audit(raw_target: str) -> dict:
         "page_structure": page_structure,
         "robots": robots,
         "sitemap": sitemap,
+        "llms_txt": llms_txt,
         "og": {
             "title": og_title,
             "description": og_description,
