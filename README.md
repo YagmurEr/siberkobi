@@ -13,6 +13,7 @@ SiberKOBİ, KOBİ'lerin temel siber güvenlik kontrollerini kendi kendilerine de
 - HTML sonuç ve iyileştirme raporu
 - SEO analizinde GPTBot, OAI-SearchBot, Googlebot ve Bingbot robots.txt erişim kontrolü
 - Temel AI görünürlük skoru, JSON-LD ve semantik içerik okunabilirliği kontrolü
+- İsteğe bağlı llms.txt varlık kontrolü (skoru etkilemez; zorunlu web standardı olarak değerlendirilmez)
 - Tarayıcı üzerinden yazdırma / PDF olarak kaydetme
 - Kullanıcı hesabı ve veritabanı gerektirmeyen yapı
 - Kalıcı değerlendirme geçmişi veya sunucu tarafı rapor arşivi yok
