@@ -251,3 +251,59 @@ def test_run_seo_audit_includes_ai_visibility_and_guidance(monkeypatch) -> None:
     )
     assert finding["why"]
     assert finding["fix"]
+
+
+
+def test_llms_txt_is_optional_and_does_not_reduce_ai_score() -> None:
+    robots = {
+        "ok": True,
+        "text": """
+        User-agent: *
+        Allow: /
+        """,
+    }
+
+    without_llms = evaluate_ai_visibility(
+        robots,
+        json_ld_count=1,
+        h1_count=1,
+        h2_count=2,
+        paragraph_count=4,
+        semantic_tags=["main", "section"],
+        llms_txt={"ok": False, "status": 404, "url": "https://example.com/llms.txt", "text": ""},
+    )
+    with_llms = evaluate_ai_visibility(
+        robots,
+        json_ld_count=1,
+        h1_count=1,
+        h2_count=2,
+        paragraph_count=4,
+        semantic_tags=["main", "section"],
+        llms_txt={
+            "ok": True,
+            "status": 200,
+            "url": "https://example.com/llms.txt",
+            "text": "# Example\n\n> Site context for LLMs.",
+        },
+    )
+
+    assert without_llms["score"] == with_llms["score"]
+    assert without_llms["maximum"] == with_llms["maximum"] == 10
+    assert without_llms["llms_txt"]["status"] == "missing"
+    assert with_llms["llms_txt"]["status"] == "present"
+    assert with_llms["llms_txt"]["present"] is True
+
+
+def test_empty_llms_txt_is_not_treated_as_present() -> None:
+    result = evaluate_ai_visibility(
+        {"ok": True, "text": "User-agent: *\nAllow: /"},
+        json_ld_count=1,
+        h1_count=1,
+        h2_count=1,
+        paragraph_count=2,
+        semantic_tags=["main"],
+        llms_txt={"ok": True, "status": 200, "url": "https://example.com/llms.txt", "text": "   "},
+    )
+
+    assert result["llms_txt"]["status"] == "empty"
+    assert result["llms_txt"]["present"] is False
