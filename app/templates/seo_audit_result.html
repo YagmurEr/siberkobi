@@ -77,7 +77,47 @@
   <section class="report-sheet">
     {{ page_header("SEO Analiz Raporu", report.final_url, 3) }}
     <div class="report-page-content">
-      <div class="report-section-title page-heading"><span>05</span><h2>Deterministik öneriler · I</h2></div>
+      <div class="report-section-title page-heading"><span>05</span><h2>AI Görünürlük</h2></div>
+      <div class="report-summary-grid compact assessment-summary-grid">
+        <article class="report-metric"><span>AI Görünürlük</span><strong>{{ report.ai_visibility.status }}</strong></article>
+        <article class="report-metric"><span>Kontrol skoru</span><strong>{{ report.ai_visibility.score }}/{{ report.ai_visibility.maximum }}</strong></article>
+        <article class="report-metric"><span>JSON-LD</span><strong>{{ report.ai_visibility.json_ld_count }} blok</strong></article>
+      </div>
+
+      <div class="scan-table-wrap flat top-gap">
+        <table class="scan-table report-table compact-table">
+          <thead><tr><th>Bot</th><th>Durum</th><th>Deterministik açıklama</th></tr></thead>
+          <tbody>
+            {% for bot in ["OAI-SearchBot", "GPTBot", "Googlebot", "Bingbot"] %}
+            {% set bot_result = report.ai_visibility.bots[bot] %}
+            <tr>
+              <td><strong>{{ bot }}</strong>{% if bot == "GPTBot" %}<br><span class="muted">Model geliştirme taraması; Search'ten bağımsız</span>{% endif %}</td>
+              <td>{{ "Açık" if bot_result.status == "allowed" else ("Engelli" if bot_result.status == "blocked" else "Doğrulanamadı") }}</td>
+              <td>{{ bot_result.reason }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="report-section compact-section">
+        <div class="report-section-title"><span>AI</span><h2>İçerik okunabilirliği</h2></div>
+        <div class="key-value-grid">
+          <div><span>H1</span><strong>{{ report.ai_visibility.content.h1_count }}</strong></div>
+          <div><span>H2</span><strong>{{ report.ai_visibility.content.h2_count }}</strong></div>
+          <div><span>Paragraf</span><strong>{{ report.ai_visibility.content.paragraph_count }}</strong></div>
+          <div><span>Semantik HTML</span><strong>{{ report.ai_visibility.content.semantic_tags | join(", ") if report.ai_visibility.content.semantic_tags else "Tespit edilmedi" }}</strong></div>
+        </div>
+        <p class="report-note">{{ report.ai_visibility.scope_note }}</p>
+      </div>
+    </div>
+    {{ page_footer(3) }}
+  </section>
+
+  <section class="report-sheet">
+    {{ page_header("SEO Analiz Raporu", report.final_url, 4) }}
+    <div class="report-page-content">
+      <div class="report-section-title page-heading"><span>06</span><h2>Deterministik öneriler · I</h2></div>
       {% if report.findings %}
       <div class="report-action-list detailed-actions">
         {% for finding in report.findings[:6] %}
@@ -102,9 +142,9 @@
 
   {% if report.findings[6:] %}
   <section class="report-sheet">
-    {{ page_header("SEO Analiz Raporu", report.final_url, 4) }}
+    {{ page_header("SEO Analiz Raporu", report.final_url, 5) }}
     <div class="report-page-content">
-      <div class="report-section-title page-heading"><span>06</span><h2>Deterministik öneriler · II</h2></div>
+      <div class="report-section-title page-heading"><span>07</span><h2>Deterministik öneriler · II</h2></div>
       <div class="report-action-list detailed-actions">
         {% for finding in report.findings[6:] %}
         <article class="report-action">
@@ -120,14 +160,14 @@
         {% endfor %}
       </div>
     </div>
-    {{ page_footer(4) }}
+    {{ page_footer(5) }}
   </section>
   {% endif %}
 
   <section class="report-sheet">
-    {{ page_header("SEO Analiz Raporu", report.final_url, 5 if report.findings[6:] else 4) }}
+    {{ page_header("SEO Analiz Raporu", report.final_url, 6 if report.findings[6:] else 5) }}
     <div class="report-page-content">
-      <div class="report-section-title page-heading"><span>07</span><h2>Sosyal, yapılandırılmış veri ve iç linkler</h2></div>
+      <div class="report-section-title page-heading"><span>08</span><h2>Sosyal, yapılandırılmış veri ve iç linkler</h2></div>
       <div class="key-value-grid">
         <div><span>Open Graph title</span><strong>{{ report.og.title or "Yok" }}</strong></div>
         <div><span>Twitter/X card</span><strong>{{ report.twitter_card or "Yok" }}</strong></div>
@@ -147,7 +187,7 @@
         </table>
       </div>
     </div>
-    {{ page_footer(5 if report.findings[6:] else 4) }}
+    {{ page_footer(6 if report.findings[6:] else 5) }}
   </section>
 
   <div class="actions no-print report-actions">
