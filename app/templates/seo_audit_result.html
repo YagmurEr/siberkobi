@@ -82,6 +82,7 @@
         <article class="report-metric"><span>AI Görünürlük</span><strong>{{ report.ai_visibility.status }}</strong></article>
         <article class="report-metric"><span>Kontrol skoru</span><strong>{{ report.ai_visibility.score }}/{{ report.ai_visibility.maximum }}</strong></article>
         <article class="report-metric"><span>JSON-LD</span><strong>{{ report.ai_visibility.json_ld_count }} blok</strong></article>
+        <article class="report-metric"><span>llms.txt</span><strong>{{ "Mevcut" if report.ai_visibility.llms_txt.present else "Bulunamadı" }}</strong></article>
       </div>
 
       <div class="scan-table-wrap flat top-gap">
@@ -101,12 +102,13 @@
       </div>
 
       <div class="report-section compact-section">
-        <div class="report-section-title"><span>AI</span><h2>İçerik okunabilirliği</h2></div>
+        <div class="report-section-title"><span>AI</span><h2>İçerik okunabilirliği ve LLM rehberi</h2></div>
         <div class="key-value-grid">
           <div><span>H1</span><strong>{{ report.ai_visibility.content.h1_count }}</strong></div>
           <div><span>H2</span><strong>{{ report.ai_visibility.content.h2_count }}</strong></div>
           <div><span>Paragraf</span><strong>{{ report.ai_visibility.content.paragraph_count }}</strong></div>
           <div><span>Semantik HTML</span><strong>{{ report.ai_visibility.content.semantic_tags | join(", ") if report.ai_visibility.content.semantic_tags else "Tespit edilmedi" }}</strong></div>
+          <div><span>llms.txt</span><strong>{{ report.ai_visibility.llms_txt.note }}</strong></div>
         </div>
         <p class="report-note">{{ report.ai_visibility.scope_note }}</p>
       </div>
@@ -137,7 +139,7 @@
       <p class="report-note">Öncelikli teknik SEO bulgusu oluşmadı.</p>
       {% endif %}
     </div>
-    {{ page_footer(3) }}
+    {{ page_footer(4) }}
   </section>
 
   {% if report.findings[6:] %}
