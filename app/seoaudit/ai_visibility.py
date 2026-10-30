@@ -54,6 +54,7 @@ def evaluate_ai_visibility(
     h2_count: int,
     paragraph_count: int,
     semantic_tags: list[str],
+    llms_txt: dict | None = None,
 ) -> dict:
     groups = _parse_robots_groups(robots.get("text", "")) if robots.get("ok") else []
     bots: dict[str, dict] = {}
@@ -88,6 +89,14 @@ def evaluate_ai_visibility(
     else:
         status = "Geliştirilmeli"
 
+    llms_txt = llms_txt or {"ok": False, "status": None, "url": "", "text": ""}
+    llms_text = (llms_txt.get("text") or "").strip()
+    llms_status = (
+        "present"
+        if llms_txt.get("ok") and llms_text
+        else ("empty" if llms_txt.get("ok") else "missing")
+    )
+
     return {
         "status": status,
         "score": score,
@@ -95,6 +104,21 @@ def evaluate_ai_visibility(
         "bots": bots,
         "checks": checks,
         "json_ld_count": json_ld_count,
+        "llms_txt": {
+            "status": llms_status,
+            "url": llms_txt.get("url", ""),
+            "http_status": llms_txt.get("status"),
+            "present": llms_status == "present",
+            "note": (
+                "llms.txt mevcut ve içerik bulundu."
+                if llms_status == "present"
+                else (
+                    "llms.txt erişilebilir ancak içerik boş."
+                    if llms_status == "empty"
+                    else "llms.txt bulunamadı veya erişilemedi; bu dosya zorunlu bir web standardı değildir."
+                )
+            ),
+        },
         "content": {
             "h1_count": h1_count,
             "h2_count": h2_count,
@@ -105,6 +129,7 @@ def evaluate_ai_visibility(
         "scope_note": (
             "Bu ücretsiz kontrol robots.txt kök-yol erişimi, indirilen statik HTML, temel başlık-paragraf "
             "yapısı ve JSON-LD varlığı üzerinden deterministik olarak yapılır. JavaScript ile sonradan "
-            "oluşan içerik, WAF/CDN bot engelleri ve gerçek bot erişimi bu kontrolde doğrulanmaz."
+            "oluşan içerik, WAF/CDN bot engelleri ve gerçek bot erişimi bu kontrolde doğrulanmaz. "
+            "llms.txt ayrıca kontrol edilir ancak öneri niteliğinde olduğundan görünürlük skoruna dahil edilmez."
         ),
     }
