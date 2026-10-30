@@ -7,6 +7,7 @@ from html.parser import HTMLParser
 from http.client import HTTPConnection, HTTPSConnection
 from urllib.parse import urljoin, urlsplit
 
+from app.seoaudit.ai_visibility import evaluate_ai_visibility
 from app.webscan.scanner import ScanValidationError, normalize_target, resolve_public_ips
 
 MAX_BODY_BYTES = 1_000_000
@@ -89,6 +90,30 @@ GUIDANCE = {
         "why": "Sayfalardaki ana başlık hiyerarşisinin tutarlı olması kullanıcıların ve arama motorlarının içeriği daha kolay anlamasına yardımcı olur.",
         "fix": "Listelenen sayfalarda ana konu için tek bir açıklayıcı H1 bırakın; diğer üst seviye başlıkları içerik yapısına göre H2/H3 olarak düzenleyin.",
     },
+    "OAI-SearchBot erişimi engelli": {
+        "why": "OAI-SearchBot, ChatGPT arama özelliklerinde web sayfalarının keşfedilmesi ve sonuçlarda gösterilmesi için kullanılan OpenAI tarayıcısıdır.",
+        "fix": "ChatGPT arama görünürlüğü isteniyorsa robots.txt içinde OAI-SearchBot için kök yolu engelleyen Disallow: / kuralını kaldırın veya uygun kapsamda Allow tanımlayın.",
+    },
+    "GPTBot erişimi engelli": {
+        "why": "GPTBot, OpenAI model geliştirme amaçlı tarama için kullanılır; bu kontrol ChatGPT arama görünürlüğünden bağımsızdır.",
+        "fix": "İçeriğinizin model geliştirme amaçlı taranmasına izin vermek istiyorsanız GPTBot kuralını gözden geçirin. Bu tercih ChatGPT Search görünürlüğünden bağımsızdır.",
+    },
+    "Googlebot erişimi engelli": {
+        "why": "Googlebot erişiminin kök seviyede engellenmesi Google Search taranabilirliğini sınırlayabilir.",
+        "fix": "Google'da görünürlük hedefleniyorsa robots.txt içinde Googlebot için kök yolu engelleyen Disallow: / kuralını kaldırın veya kapsamı daraltın.",
+    },
+    "Bingbot erişimi engelli": {
+        "why": "Bingbot erişiminin kök seviyede engellenmesi Bing tabanlı arama keşfini sınırlayabilir.",
+        "fix": "Bing görünürlüğü hedefleniyorsa robots.txt içinde Bingbot için kök yolu engelleyen Disallow: / kuralını kaldırın veya kapsamı daraltın.",
+    },
+    "AI tarayıcı erişimi değerlendirilemiyor": {
+        "why": "robots.txt erişilemediğinde hedeflenen botların tarama politikasını deterministik olarak doğrulamak mümkün değildir.",
+        "fix": "Site kökünde /robots.txt dosyasını erişilebilir hale getirin ve bot politikalarını açık biçimde tanımlayın.",
+    },
+    "AI okunabilir içerik yapısı geliştirilmeli": {
+        "why": "Açık başlık hiyerarşisi, yeterli metin paragrafları ve semantik HTML yapısı içeriğin makineler tarafından daha güvenilir biçimde ayrıştırılmasına yardımcı olur.",
+        "fix": "Tek bir ana H1, açıklayıcı H2 başlıkları, anlamlı metin paragrafları ve mümkün olduğunda main/article/section gibi semantik HTML öğeleri kullanın.",
+    },
 }
 
 
@@ -105,6 +130,8 @@ class _SEOParser(HTMLParser):
         self.images_missing_alt = 0
         self.canonical: str | None = None
         self.json_ld_count = 0
+        self.paragraph_count = 0
+        self.semantic_tags: set[str] = set()
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         tag = tag.lower()
@@ -133,6 +160,11 @@ class _SEOParser(HTMLParser):
                 self.images_missing_alt += 1
         elif tag == "script" and data.get("type", "").lower() == "application/ld+json":
             self.json_ld_count += 1
+        elif tag == "p":
+            self.paragraph_count += 1
+
+        if tag in {"main", "article", "section", "header", "footer", "nav", "aside"}:
+            self.semantic_tags.add(tag)
 
     def handle_endtag(self, tag: str) -> None:
         tag = tag.lower()
@@ -408,6 +440,14 @@ def run_seo_audit(raw_target: str) -> dict:
     sitemap = _fetch_optional(final_url, "/sitemap.xml")
     links = _check_links(final_url, parser.links)
     page_structure = _inspect_page_structure(final_url, parser.links)
+    ai_visibility = evaluate_ai_visibility(
+        robots,
+        json_ld_count=parser.json_ld_count,
+        h1_count=len(parser.headings["h1"]),
+        h2_count=len(parser.headings["h2"]),
+        paragraph_count=parser.paragraph_count,
+        semantic_tags=sorted(parser.semantic_tags),
+    )
 
     findings: list[dict] = []
 
@@ -493,6 +533,44 @@ def run_seo_audit(raw_target: str) -> dict:
                 "medium",
                 "sitemap.xml erişilemiyor",
                 "Kök dizinde erişilebilir bir sitemap.xml bulunamadı.",
+            )
+        )
+
+    if not robots["ok"]:
+        findings.append(
+            _finding(
+                "medium",
+                "AI tarayıcı erişimi değerlendirilemiyor",
+                "robots.txt erişilemediği için GPTBot, OAI-SearchBot, Googlebot ve Bingbot kök erişimi doğrulanamadı.",
+            )
+        )
+    else:
+        bot_titles = {
+            "OAI-SearchBot": "OAI-SearchBot erişimi engelli",
+            "GPTBot": "GPTBot erişimi engelli",
+            "Googlebot": "Googlebot erişimi engelli",
+            "Bingbot": "Bingbot erişimi engelli",
+        }
+        for bot, title_text in bot_titles.items():
+            if ai_visibility["bots"][bot]["status"] == "blocked":
+                findings.append(
+                    _finding(
+                        "medium" if bot != "GPTBot" else "info",
+                        title_text,
+                        f"robots.txt kök yolunda {bot} için erişim engelli görünüyor.",
+                    )
+                )
+
+    if not ai_visibility["content"]["readable"] or not ai_visibility["checks"]["semantic_structure"]:
+        findings.append(
+            _finding(
+                "info",
+                "AI okunabilir içerik yapısı geliştirilmeli",
+                (
+                    f"H1: {len(parser.headings['h1'])}, H2: {len(parser.headings['h2'])}, "
+                    f"paragraf: {parser.paragraph_count}, semantik öğeler: "
+                    f"{', '.join(sorted(parser.semantic_tags)) or 'yok'}."
+                ),
             )
         )
 
@@ -583,6 +661,7 @@ def run_seo_audit(raw_target: str) -> dict:
             if robots_meta
             else "Normal — özel indeksleme kısıtı tanımlı değil"
         ),
+        "ai_visibility": ai_visibility,
         "analytics": {
             "detected": analytics_detected,
             "status": (
