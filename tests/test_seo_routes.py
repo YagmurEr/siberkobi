@@ -36,6 +36,31 @@ def test_seo_renders_report(monkeypatch) -> None:
         "viewport": "width=device-width",
         "robots_meta": "index,follow",
         "robots_meta_status": "Özel robots direktifi tanımlı",
+        "ai_visibility": {
+            "status": "Uygun",
+            "score": 10,
+            "maximum": 10,
+            "json_ld_count": 1,
+            "bots": {
+                "OAI-SearchBot": {"status": "allowed", "reason": "Açık"},
+                "GPTBot": {"status": "allowed", "reason": "Açık"},
+                "Googlebot": {"status": "allowed", "reason": "Açık"},
+                "Bingbot": {"status": "allowed", "reason": "Açık"},
+            },
+            "content": {
+                "h1_count": 1,
+                "h2_count": 1,
+                "paragraph_count": 2,
+                "semantic_tags": ["main"],
+                "readable": True,
+            },
+            "llms_txt": {
+                "status": "present",
+                "present": True,
+                "note": "llms.txt mevcut ve içerik bulundu.",
+            },
+            "scope_note": "Deterministik temel AI görünürlük kontrolü.",
+        },
         "analytics": {
             "detected": True,
             "status": "Google Analytics / Tag Manager etiketi tespit edildi",
