@@ -11,10 +11,22 @@
       <h1 class="report-title">{{ report.target }}</h1>
       <p class="report-intro">Dışarıdan görülebilen temel web güvenliği, servis yüzeyi ve teknoloji izlerinin sınırlı analizi.</p>
 
-      <div class="report-summary-grid compact">
+      <section class="report-priority-summary" aria-labelledby="web-priority-title">
+        <div class="report-priority-heading">
+          <h2 id="web-priority-title">Bulgu öncelikleri</h2>
+          <p>{{ report.summary.findings_total }} toplam bulgu</p>
+        </div>
+        <div class="report-priority-strip">
+          <article class="report-priority report-priority--critical"><strong>{{ report.summary.critical }}</strong><span>Kritik</span></article>
+          <article class="report-priority report-priority--high"><strong>{{ report.summary.high }}</strong><span>Yüksek</span></article>
+          <article class="report-priority report-priority--medium"><strong>{{ report.summary.medium }}</strong><span>Orta</span></article>
+          <article class="report-priority report-priority--info"><strong>{{ report.summary.info }}</strong><span>Bilgilendirme</span></article>
+        </div>
+      </section>
+
+      <div class="report-summary-grid compact report-scope-summary">
         <article class="report-metric"><span>Açık TCP portu</span><strong>{{ report.summary.open_web_ports }}</strong></article>
         <article class="report-metric"><span>Teknoloji izi</span><strong>{{ report.summary.technology_count }}</strong></article>
-        <article class="report-metric report-metric--risk"><span>Yüksek / Kritik</span><strong>{{ report.summary.high + report.summary.critical }}</strong></article>
       </div>
 
       <div class="report-section compact-section">

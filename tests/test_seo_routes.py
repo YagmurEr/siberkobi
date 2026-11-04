@@ -95,4 +95,6 @@ def test_seo_renders_report(monkeypatch) -> None:
     body = response.get_data(as_text=True)
     assert "https://example.com/" in body
     assert "JSON-LD" in body
+    assert "Bulgu öncelikleri" in body
+    assert "Kırık bağlantı" in body
     assert response.headers["Cache-Control"] == "no-store"

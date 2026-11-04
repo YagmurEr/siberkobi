@@ -11,11 +11,22 @@
       <h1 class="report-title">{{ report.final_url }}</h1>
       <p class="report-intro">Girilen URL ve sınırlı iç sayfa örneklemi üzerinde teknik SEO görünürlüğü.</p>
 
-      <div class="report-summary-grid report-summary-grid--four compact">
-        <article class="report-metric"><span>Toplam bulgu</span><strong>{{ report.summary.findings_total }}</strong></article>
-        <article class="report-metric report-metric--risk"><span>Yüksek</span><strong>{{ report.summary.high }}</strong></article>
-        <article class="report-metric"><span>Kırık link</span><strong>{{ report.summary.broken_links }}</strong></article>
-        <article class="report-metric"><span>Yanıt</span><strong>{{ report.elapsed_ms }}<small> ms</small></strong></article>
+      <section class="report-priority-summary" aria-labelledby="seo-priority-title">
+        <div class="report-priority-heading">
+          <h2 id="seo-priority-title">Bulgu öncelikleri</h2>
+          <p>{{ report.summary.findings_total }} toplam bulgu</p>
+        </div>
+        <div class="report-priority-strip">
+          <article class="report-priority report-priority--high"><strong>{{ report.summary.high }}</strong><span>Yüksek</span></article>
+          <article class="report-priority report-priority--medium"><strong>{{ report.summary.medium }}</strong><span>Orta</span></article>
+          <article class="report-priority report-priority--info"><strong>{{ report.summary.info }}</strong><span>Bilgilendirme</span></article>
+          <article class="report-priority report-priority--neutral"><strong>{{ report.summary.broken_links }}</strong><span>Kırık bağlantı</span></article>
+        </div>
+      </section>
+
+      <div class="report-summary-grid compact report-scope-summary">
+        <article class="report-metric"><span>Yanıt süresi</span><strong>{{ report.elapsed_ms }}<small> ms</small></strong></article>
+        <article class="report-metric"><span>Kontrol edilen bağlantı</span><strong>{{ report.links_checked | length }}</strong></article>
       </div>
 
       <div class="report-section compact-section">

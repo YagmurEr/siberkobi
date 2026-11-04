@@ -79,4 +79,7 @@ def test_web_analysis_renders_report(monkeypatch) -> None:
     assert "TLSv1.3" in body
     assert "CVE doğrulanmadı." in body
     assert "WordPress" in body
+    assert "Bulgu öncelikleri" in body
+    assert "Kritik" in body
+    assert "Bilgilendirme" in body
     assert response.headers["Cache-Control"] == "no-store"
