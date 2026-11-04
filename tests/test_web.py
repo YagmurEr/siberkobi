@@ -17,6 +17,8 @@ def test_index_renders_product_landing_page() -> None:
     assert "Web Analiz" in body
     assert "SEO Analiz" in body
     assert "SK-T01" not in body
+    assert "Hizmetler" not in body
+    assert "KOBİ'lere Özel Paketler" not in body
 
 
 def test_assessment_renders_all_questions_and_authorization_gate() -> None:
@@ -45,6 +47,10 @@ def test_module_entry_pages_render() -> None:
     seo_body = seo.get_data(as_text=True)
     assert "SEO Analiz" in seo_body
     assert 'name="target"' in seo_body
+    assert 'class="page-tool page-web-analysis"' in openscan_body
+    assert 'class="page-tool page-seo-analysis"' in seo_body
+    assert "Hizmetler" not in openscan_body
+    assert "KOBİ'lere Özel Paketler" not in openscan_body
 
 
 def test_result_rejects_missing_authorization() -> None:
