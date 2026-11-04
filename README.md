@@ -80,7 +80,9 @@ pip install .
 flask --app app:create_app run
 ```
 
-Ayrıntılı dağıtım seçenekleri için `docs/DISTRIBUTION.md` dosyasına bakın.
+Ayrıntılı dağıtım seçenekleri için `docs/DISTRIBUTION.md`, canlı ortam
+operasyonu için `docs/DEPLOYMENT.md`, Web/SEO Analiz ağ kapsamı için
+`docs/SCAN_SCOPE.md` dosyalarına bakın.
 
 ## Geliştirme ortamı
 
@@ -99,7 +101,9 @@ Bu kontroller ve Docker image build doğrulaması GitHub Actions üzerinde çal�
 
 - Eclipta Suite kaynak kodu kullanılmaz veya kopyalanmaz.
 - Sorular ve değerlendirme kuralları uygulama kodundan ayrıdır.
-- İlk sürümde AI veya harici API gereksinimi yoktur.
+- Harici AI sağlayıcısı, API anahtarı veya kullanıcı hesabı gereksinimi yoktur.
+- Web Analiz ve SEO Analiz, kullanıcının yetki onayıyla dış hedeflere sınırlı
+  ağ istekleri gönderir; kapsam `docs/SCAN_SCOPE.md` içinde belgelenmiştir.
 - Kalıcı kullanıcı verisi tutulmaz.
 - Güvenli varsayılanlar, test edilebilirlik ve anlamlı loglama temel gereksinimdir.
 
@@ -128,6 +132,8 @@ Puanlama ve sonuç bantları `docs/ARCHITECTURE.md` içinde belgelenmiştir.
 ## Dağıtım
 
 SiberKOBİ; Docker/Compose, doğrudan Python kurulumu ve GitHub release kaynak arşivleriyle dağıtılabilir. CI, Python wheel paketinin gerekli JSON/template/static dosyalarını içerdiğini doğrular.
+
+Kullanıcıyı etkileyen değişiklikler `CHANGELOG.md` dosyasında izlenir.
 
 ## Lisans
 

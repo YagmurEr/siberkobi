@@ -2,7 +2,10 @@
 
 ## Hedef
 
-SiberKOBİ; üyelik, veritabanı veya harici API gerektirmeden çalışabilen, 25 soruluk deterministik bir siber güvenlik öz değerlendirme uygulamasıdır.
+SiberKOBİ; üyelik, veritabanı, harici AI sağlayıcısı veya API anahtarı
+gerektirmeden çalışabilen bir öz değerlendirme ve sınırlı dış görünürlük
+analizi uygulamasıdır. Web Analiz ve SEO Analiz modülleri, kullanıcının
+yetkilendirme onayıyla dış hedeflere ağ isteği gönderir.
 
 ## Modüller
 
@@ -10,17 +13,25 @@ SiberKOBİ; üyelik, veritabanı veya harici API gerektirmeden çalışabilen, 2
 - `evaluation`: deterministik değerlendirme ve kategori sonuçları
 - `reporting`: HTML raporlama için ayrılmış modül sınırı
 - `web`: HTTP route ve template katmanı
+- `webscan`: DNS, TCP, HTTP/HTTPS ve TLS tabanlı Web Analiz
+- `seoaudit`: herkese açık sayfa işaretlemeleri ve sınırlı iç bağlantılar için
+  SEO Analiz
 - `config`: yapılandırma sınırı
 
 ## Veri akışı
 
-1. Soru seti JSON'dan yüklenir.
+1. Öz değerlendirmede soru seti JSON'dan yüklenir.
 2. Kullanıcı Evet / Kısmen / Hayır, yalnız izin verilen sorularda Uygulanamaz yanıtı verir.
 3. Kullanıcı değerlendirmeyi kendi kurumu, sistemleri veya değerlendirme yapmaya yetkili olduğu ortam için kullandığını onaylar.
 4. Backend kullanım onayını ve yanıt kümesini doğrular.
 5. Evaluation engine yanıt kümesini tamlık ve izin kuralları açısından doğrular.
 6. Sonuç toplam ve kategori bazında hesaplanır.
 7. HTML sonuç ekranı iyileştirme gerektiren maddeleri listeler.
+
+Web Analiz ve SEO Analiz için ayrı veri akışı kullanılır: kullanıcı hedefi ve
+yetki onayını gönderir; backend hedefi doğrular, yalnız tanımlı sınırlı
+kontrolleri yürütür ve sonucu kalıcı olarak saklamadan HTML rapor olarak döner.
+Tam ağ kapsamı `SCAN_SCOPE.md` içinde belgelenmiştir.
 
 ## Puanlama
 
@@ -64,6 +75,8 @@ Bu kontrol:
 
 - İlk sürümde kullanıcı hesabı ve kalıcı kişisel veri depolama yoktur.
 - Form girdileri allow-list ile doğrulanır.
-- Harici AI/API bağımlılığı yoktur.
+- Harici AI sağlayıcısı veya API anahtarı bağımlılığı yoktur.
+- Web Analiz ve SEO Analiz dış hedeflere sınırlı ağ isteği gönderebilir;
+  kullanıcının yetki onayı ve hedef doğrulaması zorunludur.
 - Secret gerektiren konfigürasyon kullanılmaz.
 - Public release öncesinde bağımlılık, secret ve lisans kontrolleri zorunludur.

@@ -28,6 +28,9 @@ The repository must remain private until all release-blocking items below are co
 - [x] CONTRIBUTING.md is present.
 - [x] Direct dependency licenses are documented.
 - [x] Distribution guide is present.
+- [x] Deployment and operational responsibilities are documented.
+- [x] Web/SEO analysis network scope and authorization boundary are documented.
+- [x] User-facing changes are tracked in CHANGELOG.md.
 - [x] v0.1.0 release notes reflect current product behavior.
 
 ## Licensing
