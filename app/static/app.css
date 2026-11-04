@@ -2038,3 +2038,11 @@ body {
     width: 68px !important;
   }
 }
+
+/* The footer has a single brand signature, so align it with the content edge. */
+.site-footer .footer-inner {
+  justify-content: flex-start;
+}
+.site-footer .eclipta-signature {
+  align-items: flex-start;
+}
