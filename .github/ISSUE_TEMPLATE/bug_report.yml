@@ -1,0 +1,76 @@
+name: Bug report
+description: Report a reproducible SiberKOBİ problem.
+title: "[Bug] "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Güvenlik açığı bildiriyorsanız bu formu kullanmayın. SECURITY.md içindeki özel bildirim yöntemini izleyin.
+
+  - type: input
+    id: version
+    attributes:
+      label: Sürüm
+      description: Örn. v0.1.0 veya commit SHA.
+      placeholder: v0.1.0
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install
+    attributes:
+      label: Kurulum yöntemi
+      options:
+        - Docker / Docker Compose
+        - Python kurulumu
+        - Kaynak koddan geliştirme ortamı
+        - Diğer
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Sorun
+      description: Ne oldu?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Tekrarlama adımları
+      description: Sorunu yeniden üretmek için gerekli en kısa adımlar.
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Beklenen davranış
+      description: Ne olmasını bekliyordunuz?
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Ortam
+      description: İşletim sistemi, Python/Docker sürümü ve ilgili diğer bilgiler.
+      placeholder: macOS 15, Docker 28.x
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Hassas veri kontrolü
+      options:
+        - label: Bu issue içinde parola, token, müşteri verisi veya başka hassas bilgi paylaşmadım.
+          required: true
