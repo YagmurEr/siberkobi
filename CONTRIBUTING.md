@@ -18,7 +18,7 @@ Before opening a pull request, run:
 ```bash
 ruff check .
 pytest -q
-python scripts/validate_json.py
+python -m scripts.validate_json
 bandit -r app
 pip-audit
 docker build -t siberkobi:test .
