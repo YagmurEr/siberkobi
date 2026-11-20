@@ -138,3 +138,7 @@ Kullanıcıyı etkileyen değişiklikler `CHANGELOG.md` dosyasında izlenir.
 ## Lisans
 
 SiberKOBİ MIT License altında yayımlanır. Ayrıntılar için `LICENSE` dosyasına bakın.
+
+## İlgili Eclipta projeleri
+
+Tehditleri takip etmek için [SiberGündem'i kullanın](https://eclipta.tr/sibergundem).
