@@ -1,5 +1,3 @@
-from threading import Event, Thread
-
 from app import create_app
 from app.request_limits import ScanAdmission
 
