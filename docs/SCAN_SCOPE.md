@@ -10,6 +10,10 @@ Kullanıcı, her iki araçta da hedefi değerlendirmeye yetkili olduğunu onayla
 zorundadır. Bu onay yalnız arayüzde değil, sunucu tarafında da doğrulanır.
 Yetkisiz hedeflerde araç kullanılmamalıdır.
 
+## Analiz sınıflandırması
+
+Web Analiz yalnız pasif değildir: sınırlı TCP bağlantı denemeleri ve HTTP/TLS istekleri yapan düşük etkili aktif keşiftir. SEO Analiz herkese açık URL'lere kontrollü HTTP istekleri gönderir. Uygulama agresif zafiyet taraması, exploit veya kimlik doğrulama denemesi yapmaz. Bu sınıflandırma herhangi bir hedef için otomatik yasal yetki sağlamaz.
+
 ## Web Analiz
 
 Web Analiz:
@@ -35,7 +39,7 @@ SEO Analiz:
 - Başlık, açıklama, başlık hiyerarşisi, canonical, viewport, robots.txt,
   sitemap, Open Graph, Twitter/X card, JSON-LD ve görsel alt metni gibi herkese
   açık işaretlemeleri okur.
-- GPTBot, OAI-SearchBot, Googlebot ve Bingbot için robots.txt tabanlı erişim
+- GPTBot, OAI-SearchBot, Googlebot, Bingbot, ClaudeBot ve PerplexityBot için robots.txt tabanlı erişim
   sinyallerini değerlendirir.
 - Aynı host üzerindeki sınırlı sayıda iç bağlantı örneğini ve sayfa yapısını
   kontrol eder.
