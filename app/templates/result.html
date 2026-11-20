@@ -50,7 +50,15 @@
             </div>
             <h3>{{ action.title }}</h3>
             <p>{{ action.action }}</p>
-            <p class="report-note">Ücretsiz kaynaklar: <a href="https://www.cisa.gov/resources-tools/resources" target="_blank" rel="noopener noreferrer">CISA</a> · <a href="https://www.nist.gov/cyberframework" target="_blank" rel="noopener noreferrer">NIST CSF</a> · <a href="https://www.kvkk.gov.tr/" target="_blank" rel="noopener noreferrer">KVKK</a></p>
+            {% if group.category_id == "A" %}
+            <p class="report-note">Referans: <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener noreferrer">CISA KEV kataloğu</a></p>
+            {% elif group.category_id == "B" %}
+            <p class="report-note">Referans: <a href="https://www.cisa.gov/mfa" target="_blank" rel="noopener noreferrer">CISA MFA rehberi</a></p>
+            {% elif group.category_id == "D" %}
+            <p class="report-note">Referans: <a href="https://www.kvkk.gov.tr/" target="_blank" rel="noopener noreferrer">KVKK resmi kaynakları</a></p>
+            {% else %}
+            <p class="report-note">Referans: <a href="https://www.nist.gov/cyberframework" target="_blank" rel="noopener noreferrer">NIST Cybersecurity Framework</a></p>
+            {% endif %}
           </article>
           {% endfor %}
         </div>
