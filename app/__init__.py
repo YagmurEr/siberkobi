@@ -3,6 +3,7 @@ import time
 
 from flask import Flask, g, request
 
+from app.request_limits import ScanAdmission, check_scan_admission, release_scan_admission
 from app.web.routes import web_bp
 
 
@@ -15,6 +16,9 @@ def create_app() -> Flask:
     )
 
     app.register_blueprint(web_bp)
+    app.extensions["siberkobi_scan_guard"] = ScanAdmission()
+    app.before_request(check_scan_admission)
+    app.after_request(release_scan_admission)
 
     @app.before_request
     def start_request_timer() -> None:
