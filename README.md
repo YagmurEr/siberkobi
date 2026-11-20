@@ -21,6 +21,24 @@ SiberKOBİ, KOBİ'lerin temel siber güvenlik kontrollerini kendi kendilerine de
 - Docker ile kolay kurulum
 - Modüler Flask mimarisi
 
+## Mimari ve veri akışı
+
+```mermaid
+flowchart TD
+    U[Kullanıcı / tarayıcı] --> F[Flask web routes]
+    F --> A[25 soruluk öz değerlendirme]
+    F --> W[Web Analiz]
+    F --> S[SEO ve AI görünürlük analizi]
+    A --> J[questions.json / kurallar]
+    J --> E[Deterministik puanlama]
+    E --> R[HTML sonuç ve öneriler]
+    W --> R
+    S --> R
+    R --> U
+```
+
+Uygulama GitHub Pages üzerinde statik JSON yayımlayan bir servis değildir. Flask ve Gunicorn ile Docker veya Python ortamında çalışır; kullanıcıya raporu HTTP üzerinden sunar. Web Analiz ve SEO Analiz, açık yetki onayının ardından kontrollü dış ağ istekleri gerçekleştirebilir. Mimari ayrıntılar [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) içinde yer alır.
+
 ## Veri saklama yaklaşımı
 
 SiberKOBİ varsayılan olarak stateless çalışır.
@@ -90,6 +108,7 @@ operasyonu için `docs/DEPLOYMENT.md`, Web/SEO Analiz ağ kapsamı için
 pip install -e ".[dev]"
 ruff check .
 pytest -q
+python scripts/validate_json.py
 bandit -r app
 pip-audit
 python -m build
@@ -138,3 +157,7 @@ Kullanıcıyı etkileyen değişiklikler `CHANGELOG.md` dosyasında izlenir.
 ## Lisans
 
 SiberKOBİ MIT License altında yayımlanır. Ayrıntılar için `LICENSE` dosyasına bakın.
+
+## Katkı ve güvenlik
+
+Katkı kuralları [CONTRIBUTING.md](CONTRIBUTING.md), güvenlik bildirim süreci [SECURITY.md](SECURITY.md) dosyasındadır. GitHub Actions her PR için lint, test, veri sözleşmesi, bağımlılık denetimi, paket ve Docker doğrulamalarını çalıştırır. Dependabot Python ve GitHub Actions bağımlılıklarını haftalık kontrol eder.
