@@ -43,6 +43,12 @@ Bu depoda reverse proxy veya sertifika yönetimi yapılandırması bulunmaz. Kur
 kendi alan adı, TLS sertifikası ve ağ topolojisine uygun yapılandırmayı
 uygulamalıdır.
 
+## İstek sınırları ve kapasite
+
+Uygulama Web/SEO analiz POST uçlarında varsayılan olarak IP başına 60 saniyede 5 istek ve aynı anda 2 analiz için **process-local** kabul kontrolü kullanır. 429 durumunda `Retry-After: 60`, eşzamanlı kapasite doluysa 503 ve `Retry-After: 10` döndürür.
+
+Bu koruma tek Gunicorn worker'ı veya tek Python process'i için geçerlidir. Birden çok worker/replica kullanıldığında kota ortak değildir. İnternete açık kurulumlarda güvenilir reverse proxy ya da merkezi rate limiter ile global kota, connection limit, TLS ve egress kontrolleri ayrıca sağlanmalıdır. `X-Forwarded-For` varsayılan olarak kaynak IP sayılmaz; yalnız güvenilir proxy üzerinden gerçek istemci IP'sini sunacak şekilde yapılandırın. Aynı NAT arkasındaki kullanıcılar IP kotasını paylaşabilir. Bu sınırlar tek başına DDoS koruması değildir.
+
 ## Güncelleme
 
 Güncellemeden önce mevcut commit'i kaydedin; sorun çıkarsa bu commit'e geri

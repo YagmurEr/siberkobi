@@ -101,8 +101,8 @@
         <table class="scan-table report-table compact-table">
           <thead><tr><th>Bot</th><th>Durum</th><th>Deterministik açıklama</th></tr></thead>
           <tbody>
-            {% for bot in ["OAI-SearchBot", "GPTBot", "Googlebot", "Bingbot"] %}
-            {% set bot_result = report.ai_visibility.bots[bot] %}
+            {% for bot in ["OAI-SearchBot", "GPTBot", "Googlebot", "Bingbot", "ClaudeBot", "PerplexityBot"] %}
+            {% set bot_result = report.ai_visibility.bots.get(bot, {"status": "unknown", "reason": "Bu veri raporda bulunmuyor."}) %}
             <tr>
               <td><strong>{{ bot }}</strong>{% if bot == "GPTBot" %}<br><span class="muted">Model geliştirme taraması; Search'ten bağımsız</span>{% endif %}</td>
               <td>{{ "Açık" if bot_result.status == "allowed" else ("Engelli" if bot_result.status == "blocked" else "Doğrulanamadı") }}</td>

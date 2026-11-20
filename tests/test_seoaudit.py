@@ -307,3 +307,25 @@ def test_empty_llms_txt_is_not_treated_as_present() -> None:
 
     assert result["llms_txt"]["status"] == "empty"
     assert result["llms_txt"]["present"] is False
+
+
+def test_extra_ai_bots_are_informational_only() -> None:
+    robots = {
+        "ok": True,
+        "text": (
+            "User-agent: ClaudeBot\nDisallow: /\n"
+            "User-agent: PerplexityBot\nAllow: /\n"
+            "User-agent: *\nAllow: /\n"
+        ),
+    }
+    result = evaluate_ai_visibility(
+        robots,
+        json_ld_count=1,
+        h1_count=1,
+        h2_count=2,
+        paragraph_count=4,
+        semantic_tags=["main", "section"],
+    )
+    assert result["bots"]["ClaudeBot"]["status"] == "blocked"
+    assert result["bots"]["PerplexityBot"]["status"] == "allowed"
+    assert result["maximum"] == 10

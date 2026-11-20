@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-AI_BOTS = ("GPTBot", "OAI-SearchBot", "Googlebot", "Bingbot")
+AI_BOTS = ("GPTBot", "OAI-SearchBot", "Googlebot", "Bingbot", "ClaudeBot", "PerplexityBot")
 
 
 def _parse_robots_groups(text: str) -> list[dict]:

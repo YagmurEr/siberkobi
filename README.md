@@ -1,5 +1,10 @@
 # SiberKOBİ
 
+[Canlı SiberKOBİ uygulaması](https://kobi.eclipta.tr/siberkobi) · [Örnek rapor (temsili)](docs/SAMPLE_REPORT.md) · [Katkı rehberi](CONTRIBUTING.md)
+
+> **Web Analiz:** Sınırlı TCP bağlantısı, HTTP ve TLS kontrolleri içerir (düşük etkili aktif keşif). **SEO Analiz:** Kamuya açık sayfalara sınırlı HTTP istekleri gönderir. Bu araçlar exploit veya agresif zafiyet taraması yapmaz; yalnız yetkili olunan hedeflerde kullanılmalıdır.
+
+
 SiberKOBİ, KOBİ'lerin temel siber güvenlik kontrollerini kendi kendilerine değerlendirebilmesi için geliştirilen ücretsiz ve açık kaynak bir öz değerlendirme aracıdır.
 
 ## Özellikler
@@ -20,6 +25,10 @@ SiberKOBİ, KOBİ'lerin temel siber güvenlik kontrollerini kendi kendilerine de
 - Kullanım öncesi zorunlu yetki/sorumluluk onayı
 - Docker ile kolay kurulum
 - Modüler Flask mimarisi
+
+## Güvenlik ve işlem kapasitesi
+
+Tarama uç noktaları için process başına istek kotası ve eşzamanlılık sınırı vardır. Çok worker'lı veya internete açık kurulumlarda reverse proxy üzerinde merkezi sınırlandırma zorunludur. Ayrıntılar: [Dağıtım rehberi](docs/DEPLOYMENT.md).
 
 ## Veri saklama yaklaşımı
 
@@ -134,6 +143,12 @@ Puanlama ve sonuç bantları `docs/ARCHITECTURE.md` içinde belgelenmiştir.
 SiberKOBİ; Docker/Compose, doğrudan Python kurulumu ve GitHub release kaynak arşivleriyle dağıtılabilir. CI, Python wheel paketinin gerekli JSON/template/static dosyalarını içerdiğini doğrular.
 
 Kullanıcıyı etkileyen değişiklikler `CHANGELOG.md` dosyasında izlenir.
+
+## Referanslar
+
+Mevcut değerlendirme eylem planlarının yanında ücretsiz resmi rehberler sunulur. [Kaynak listesi](docs/REFERENCE_RESOURCES.md) ve [temsili rapor](docs/SAMPLE_REPORT.md) incelenebilir.
+
+README için gerçek ekran görüntüleri henüz eklenmedi. Görseller canlı uygulamadan doğrulanmış ekran görüntüleri olarak alınmalıdır; ürünün mevcut ekranını temsil etmeyen görsel kullanılmaz.
 
 ## Lisans
 
