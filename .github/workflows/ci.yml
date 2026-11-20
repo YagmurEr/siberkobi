@@ -24,7 +24,7 @@ jobs:
       - name: Ruff
         run: ruff check .
       - name: Validate assessment JSON contract
-        run: python scripts/validate_json.py
+        run: python -m scripts.validate_json
       - name: Tests
         run: pytest -q
       - name: Bandit
