@@ -108,7 +108,7 @@ operasyonu için `docs/DEPLOYMENT.md`, Web/SEO Analiz ağ kapsamı için
 pip install -e ".[dev]"
 ruff check .
 pytest -q
-python scripts/validate_json.py
+python -m scripts.validate_json
 bandit -r app
 pip-audit
 python -m build
