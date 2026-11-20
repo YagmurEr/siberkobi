@@ -5,6 +5,10 @@ izlemek için tutulur.
 
 ## Yayınlanmamış
 
+- Python ve GitHub Actions bağımlılıkları için Dependabot yapılandırması eklendi.
+- Değerlendirme JSON dosyası için yinelenen anahtar ve veri sözleşmesi doğrulaması CI'ya eklendi.
+- README mimari diyagramı ve yerel doğrulama komutları güncellendi.
+
 - Ana sayfa navigasyonundan Hizmetler bağlantısı kaldırıldı.
 - Footer'daki KOBİ'lere Özel Paketler bağlantısı kaldırıldı ve Eclipta imzası
   sola hizalandı.
